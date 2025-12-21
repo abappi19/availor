@@ -1,50 +1,313 @@
-# Welcome to your Expo app 👋
+# Availor - AI English Teacher App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+An offline-first, privacy-focused AI English teacher app built with React Native, Expo, and ExecuTorch (planned).
 
-## Get started
+## 🎯 Project Overview
 
-1. Install dependencies
+Availor is a mobile application that helps users improve their English skills through:
+- 💬 **AI-powered conversations** with personalized feedback
+- 🎤 **Voice mode** for pronunciation practice
+- 📸 **OCR support** for learning from images and PDFs
+- 🎮 **Gamification** with streaks, achievements, and levels
+- 📊 **Progress tracking** with detailed analytics
 
+## ✨ Features Implemented
+
+### ✅ Phase 1: UI Foundation & Design System
+- **NativeWind** (Tailwind CSS) integration
+- **Atomic Design System** with tokens, theme, and animations
+- **Reusable components**:
+  - Atoms: Button, Badge, Text, Input, Avatar, Icon, Spinner, Divider
+  - Molecules: MessageBubble, ProgressBar, StreakCounter, LevelBadge, AchievementCard, StatCard, InputBar
+- Light/Dark theme support
+- Responsive design with consistent styling
+
+### ✅ Phase 2: Core Conversation
+- Beautiful conversation interface with animated message bubbles
+- Mock LLM integration (placeholder for ExecuTorch)
+- Real-time typing indicators
+- Message persistence with AsyncStorage
+- Smooth animations with React Native Reanimated
+- Context-aware AI responses
+
+### ✅ Phase 3: Onboarding
+- **3-step onboarding flow**:
+  1. Welcome & name input
+  2. English level assessment (A1-C2)
+  3. Personalization (interests, goals, learning style)
+- Animated transitions between steps
+- User profile creation and storage
+- Skip logic for returning users
+
+### ✅ Phase 4: Gamification System
+- **Achievements** with categories:
+  - Streak achievements (3, 7, 30, 100 days)
+  - Conversation milestones (10, 50, 100)
+  - Practice time goals (1hr, 5hrs, 1000min)
+  - Level milestones (5, 10, 25)
+- **Points & Leveling** system with XP
+- **Streak tracking** with daily updates
+- Unlock animations and notifications
+
+### ✅ Phase 7: Progress Dashboard
+- **Real-time statistics**:
+  - Current level and XP progress
+  - Streak counter with flame animation
+  - Total conversations and practice time
+  - English proficiency level
+- **Weekly progress chart** with line graph
+- **Quick stats** panel
+- Pull-to-refresh functionality
+- Beautiful gradient cards
+
+## 🏗️ Architecture
+
+### Design Patterns
+- **Atomic Design** for UI components
+- **Feature-based** modular architecture
+- **Service layer** for business logic
+- **Lazy loading** for AI models (when integrated)
+
+### Project Structure
+```
+availor/
+├── app/                    # Expo Router screens
+│   ├── (tabs)/            # Tab navigation
+│   │   ├── index.tsx      # Conversation
+│   │   └── progress.tsx   # Progress dashboard
+│   ├── onboarding/        # Onboarding flow
+│   └── _layout.tsx        # Root layout
+├── components/            # Atomic design components
+│   ├── atoms/            # Basic components
+│   └── molecules/        # Composite components
+├── features/             # Feature modules
+│   ├── conversation/     # Chat feature
+│   ├── onboarding/       # Onboarding
+│   ├── progress/         # Progress tracking
+│   └── gamification/     # Achievements
+├── services/             # Business logic
+│   ├── executorch/       # AI services (mock)
+│   ├── storage/          # Data persistence
+│   ├── gamification/     # Achievement logic
+│   └── progress/         # Progress tracking
+├── design-system/        # Design tokens
+│   ├── tokens.ts         # Colors, spacing, typography
+│   ├── theme.ts          # Theme configuration
+│   └── animations.ts     # Reusable animations
+└── plan.md              # Implementation plan
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+- Expo CLI
+- iOS Simulator or Android Emulator (or Expo Go app)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   cd availor
+   ```
+
+2. **Install dependencies**
    ```bash
    npm install
    ```
 
-2. Start the app
-
+3. **Start the development server**
    ```bash
-   npx expo start
+   npm start
    ```
 
-In the output, you'll find options to open the app in a
+4. **Run on a device**
+   - Press `i` for iOS simulator
+   - Press `a` for Android emulator
+   - Scan QR code with Expo Go app
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 📦 Dependencies
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### Core
+- `react-native` 0.81.5
+- `expo` ~54.0.30
+- `expo-router` ~6.0.21
+- `typescript` ~5.9.2
 
-## Get a fresh project
+### UI & Styling
+- `nativewind` ^4.0.0 - Tailwind CSS for React Native
+- `react-native-reanimated` ~4.1.1 - Smooth animations
+- `react-native-gesture-handler` ~2.28.0 - Touch interactions
+- `expo-linear-gradient` - Gradient backgrounds
+- `@expo/vector-icons` ^15.0.3 - Icon library
 
-When you're ready, run:
+### State & Storage
+- `@react-native-async-storage/async-storage` - Local storage
+- `zustand` ^4.5.0 - State management
 
-```bash
-npm run reset-project
+### Utilities
+- `date-fns` ^3.0.0 - Date utilities
+- `react-native-chart-kit` ^6.12.0 - Charts and graphs
+- `expo-speech` - Text-to-speech (native)
+
+## 🎨 Design System
+
+### Color Palette
+```typescript
+primary: {
+  500: '#2196F3',  // Main brand color
+  600: '#1E88E5',  // Hover state
+}
+success: {
+  500: '#4CAF50',  // Achievements, streaks
+}
+warning: {
+  500: '#FF9800',  // Reminders
+}
+gold: '#FFD700',   // Premium badges
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Typography
+- Font sizes: xs (12px) → xxxl (48px)
+- Weights: regular (400), medium (500), semibold (600), bold (700)
+- Line heights optimized for readability
 
-## Learn more
+### Spacing
+- Base unit: 4px
+- Scale: xs (4px), sm (8px), md (16px), lg (24px), xl (32px), xxl (48px)
 
-To learn more about developing your project with Expo, look at the following resources:
+## 🔮 Planned Features
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Phase 5: Voice Mode (In Progress)
+- Real-time speech-to-text with Whisper (via ExecuTorch)
+- Animated waveform visualization
+- Voice activity detection
+- Text-to-speech responses
+- Pronunciation feedback
 
-## Join the community
+### Phase 6: OCR Processor
+- Image text extraction with TrOCR (via ExecuTorch)
+- PDF document parsing
+- Bounding box animations
+- Context integration with conversation
 
-Join our community of developers creating universal apps.
+### Phase 8: Polish & Animations
+- Micro-interactions (haptic feedback, sounds)
+- Page transitions
+- Loading skeletons
+- Empty states
+- Confetti animations for achievements
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Phase 9: Testing & Launch
+- Unit and integration tests
+- E2E testing
+- Performance profiling
+- App store assets
+- Beta testing
+- Production release
+
+## 🤖 AI Integration (Planned)
+
+### ExecuTorch Integration
+The app is designed to use **React Native ExecuTorch** for all AI inference:
+
+```typescript
+// Planned hooks (currently using mock implementations)
+import { useLLM } from 'react-native-executorch';
+import { useSpeechToText } from 'react-native-executorch';
+import { useOCR } from 'react-native-executorch';
+import { useTextToImage } from 'react-native-executorch';
+```
+
+### Models (Planned)
+- **LLM**: Llama 3.2 3B (quantized to INT4) - Conversation AI
+- **STT**: Whisper-tiny (quantized) - Speech-to-text
+- **OCR**: TrOCR (quantized) - Text extraction from images
+- **TTS**: Using native platform TTS (expo-speech)
+
+**Note**: ExecuTorch integration is pending library availability. Current implementation uses mock services that can be easily replaced.
+
+## 📱 Screens
+
+### 1. Onboarding (3 screens)
+- Welcome screen with name input
+- Skill assessment (A1-C2 levels)
+- Personalization (interests, goals, style)
+
+### 2. Conversation (Tab 1)
+- Chat interface with AI teacher
+- Message bubbles with animations
+- Typing indicators
+- Input bar with send button
+
+### 3. Progress (Tab 2)
+- Level badge with XP progress
+- Streak counter with flame animation
+- Statistics cards (conversations, time, level, points)
+- Weekly practice chart
+- Quick stats panel
+
+### 4. Profile (Tab 3)
+- User information
+- Settings
+- Data management
+
+## 🔐 Privacy & Security
+
+- **Offline-first**: All AI processing happens on-device (when ExecuTorch is integrated)
+- **Local storage**: User data stored locally with AsyncStorage
+- **No tracking**: Zero analytics or tracking
+- **Data control**: Users can export or delete their data
+
+## 🧪 Testing
+
+```bash
+# Run linter
+npm run lint
+
+# Run tests (when implemented)
+npm test
+```
+
+## 📝 Development Notes
+
+### Current State
+- **Phase 1-4**: ✅ Complete
+- **Phase 7**: ✅ Complete
+- **Phase 5**: 🔄 In progress (Voice mode placeholders)
+- **Phase 6**: 📋 Pending (OCR)
+- **Phase 8-9**: 📋 Pending
+
+### Known Limitations
+1. **LLM responses** are mocked - awaiting ExecuTorch integration
+2. **Voice features** use placeholders - STT/TTS to be integrated
+3. **OCR** not yet implemented
+4. **Onboarding skip logic** not yet implemented in root layout
+
+### Next Steps
+1. Create comprehensive achievement unlock modal
+2. Add haptic feedback to interactions
+3. Implement voice mode UI components
+4. Create OCR processor with animations
+5. Add more unit tests
+6. Optimize performance for low-end devices
+
+## 🤝 Contributing
+
+This is a private project, but feedback and suggestions are welcome!
+
+## 📄 License
+
+Proprietary - All rights reserved
+
+## 🙏 Acknowledgments
+
+- **React Native** team for the amazing framework
+- **Expo** for the development platform
+- **NativeWind** for Tailwind CSS integration
+- **PyTorch** team for ExecuTorch (planned)
+
+---
+
+**Built with ❤️ for English learners worldwide**
