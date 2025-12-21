@@ -42,7 +42,3 @@ app-example
 /ios
 /android
 
-# ExecuTorch Model Files
-*.pte
-assets/models/**/*.pte
-assets/models/**/*.json

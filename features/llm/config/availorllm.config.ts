@@ -1,0 +1,33 @@
+// /**
+//  * Configuration for Availor LLM feature
+//  */
+
+// import { Asset } from 'expo-asset';
+
+// export const DEFAULT_SYSTEM_PROMPT =
+//     "You are a helpful and friendly English teacher. Help users improve their English through conversation, provide corrections when needed, and explain grammar concepts clearly.";
+
+// /**
+//  * Load Hammer model sources using Expo Asset API
+//  * This prevents Metro from trying to inline the large .pte file
+//  * eslint-disable-next-line @typescript-eslint/no-require-imports
+//  */
+// export const loadHammerModel = async () => {
+//     /* eslint-disable @typescript-eslint/no-require-imports */
+//     const [modelAsset] = await Asset.loadAsync(
+//         require('@/assets/models/hammer-2.1/hammer2_1_0_5B_8da4w.pte')
+//     );
+//     const [tokenizerAsset] = await Asset.loadAsync(
+//         require('@/assets/models/hammer-2.1/tokenizer.json')
+//     );
+//     const [tokenizerConfigAsset] = await Asset.loadAsync(
+//         require('@/assets/models/hammer-2.1/tokenizer_config.json')
+//     );
+//     /* eslint-enable @typescript-eslint/no-require-imports */
+
+//     return {
+//         modelSource: modelAsset.localUri || modelAsset.uri,
+//         tokenizerSource: tokenizerAsset.localUri || tokenizerAsset.uri,
+//         tokenizerConfigSource: tokenizerConfigAsset.localUri || tokenizerConfigAsset.uri,
+//     };
+// };

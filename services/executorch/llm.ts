@@ -1,4 +1,7 @@
 /**
+ * @deprecated Use features/llm/useAvailorLLM instead
+ * This file is kept for backward compatibility only
+ * 
  * LLM Service - Wrapper for React Native ExecuTorch useLLM hook
  * Integrates with AI Personalization to provide customized teaching behavior
  */

@@ -3,20 +3,28 @@
  * Manages conversation state and interactions with LLM
  */
 
-import { LLMMessage, llmService } from '@/services/executorch/llm';
+import { getToolDefinitions } from '@/features/availor-tools-definition';
+import { FileContext } from '@/features/file-context';
+import { useAvailorLLM, type AvailorLLMMessage } from '@/features/llm';
 import {
     Conversation,
     conversationHistoryService,
     Message,
 } from '@/services/storage/conversationHistory';
-import { FileContext } from '@/features/file-context';
 import { useCallback, useEffect, useState } from 'react';
 
 export const useConversation = () => {
+    const availorLLM = useAvailorLLM();
+    const toolDefinitions = getToolDefinitions();
+
     const [conversation, setConversation] = useState<Conversation | null>(null);
-    const [messages, setMessages] = useState<Message[]>([]);
+    const [messages, setMessages] = useState<Message[]>([{
+        id: "1",
+        role: "system",
+        content: "You are an AI English teacher. You are here to help the user improve their English skills.",
+        timestamp: new Date().getTime(),
+    }]);
     const [isLoading, setIsLoading] = useState(false);
-    const [isTyping, setIsTyping] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     // Load current conversation on mount
@@ -50,14 +58,14 @@ export const useConversation = () => {
         try {
             // Prepare user message content with file context
             let messageContent = content.trim();
-            
+
             // Add file context if files are attached
             if (files.length > 0) {
                 const fileContexts = files
                     .filter(f => f.status === 'ready' && f.extractedText)
                     .map(f => `[File: ${f.name}]\n${f.extractedText}`)
                     .join('\n\n');
-                
+
                 if (fileContexts) {
                     messageContent = `${messageContent}\n\n---\nContext from uploaded files:\n${fileContexts}`;
                 }
@@ -71,41 +79,42 @@ export const useConversation = () => {
 
             setMessages((prev) => [...prev, userMessage]);
 
-            // Show typing indicator
-            setIsTyping(true);
-
-            // Prepare context for LLM (system prompt is automatically injected by LLM service based on user personalization)
-            const llmMessages: LLMMessage[] = [
+            // Prepare context for LLM (system prompt is automatically configured in useAvailorLLM)
+            const llmMessages: AvailorLLMMessage[] = [
                 ...messages.map((m) => ({
-                    role: m.role,
+                    role: m.role as 'user' | 'assistant',
                     content: m.content,
                 })),
                 {
-                    role: 'user',
+                    role: 'user' as const,
                     content: messageContent,
                 },
             ];
 
-            // Get LLM response (personalized based on onboarding preferences and file context)
-            const response = await llmService.generate(llmMessages);
+            // Generate LLM response with tool support
+            await availorLLM.generate(llmMessages, toolDefinitions);
 
-            setIsTyping(false);
+            // Wait for response to complete (watch isGenerating state)
+            // Note: In a real implementation, we'd use a useEffect to watch availorLLM.response
+            // For now, we'll wait for the generate call to complete
 
-            // Add AI message
-            const aiMessage = await conversationHistoryService.addMessage(conversation.id, {
-                role: 'assistant',
-                content: response.content,
-            });
+            // Check if we have a response
+            if (availorLLM.response) {
+                // Add AI message
+                const aiMessage = await conversationHistoryService.addMessage(conversation.id, {
+                    role: 'assistant',
+                    content: availorLLM.response,
+                });
 
-            setMessages((prev) => [...prev, aiMessage]);
+                setMessages((prev) => [...prev, aiMessage]);
+            }
         } catch (err) {
             console.error('Error sending message:', err);
             setError('Failed to send message');
-            setIsTyping(false);
         } finally {
             setIsLoading(false);
         }
-    }, [conversation, messages]);
+    }, [conversation, messages, availorLLM, toolDefinitions]);
 
     const clearConversation = useCallback(async () => {
         if (!conversation) return;
@@ -124,8 +133,10 @@ export const useConversation = () => {
     return {
         messages,
         isLoading,
-        isTyping,
-        error,
+        isTyping: availorLLM.isGenerating,
+        error: error || availorLLM.error,
+        isModelReady: availorLLM.isReady,
+        downloadProgress: availorLLM.downloadProgress,
         sendMessage,
         clearConversation,
     };

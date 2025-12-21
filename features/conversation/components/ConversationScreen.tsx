@@ -1,12 +1,12 @@
 import { InputBar } from '@/components/molecules/InputBar';
 import React from 'react';
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useConversation } from '../hooks/useConversation';
 import { MessageList } from './MessageList';
 
 export const ConversationScreen: React.FC = () => {
-  const { messages, isTyping, sendMessage } = useConversation();
+  const { messages, isTyping, sendMessage, isModelReady, downloadProgress } = useConversation();
 
   const handleSendMessage = (text: string) => {
     if (!text.trim()) return;
@@ -21,6 +21,8 @@ export const ConversationScreen: React.FC = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
       >
+        <Text>{isModelReady ? 'Model Ready' : 'Model Not Ready'}</Text>
+        <Text>{downloadProgress}</Text>
         {/* Message List */}
         <MessageList
           messages={messages}
