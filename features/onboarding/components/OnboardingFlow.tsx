@@ -1,58 +1,128 @@
+/**
+ * Comprehensive Onboarding Flow Orchestrator
+ * Manages navigation between all onboarding steps
+ */
+
 import React from 'react';
-import { View } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useOnboarding } from '../hooks/useOnboarding';
-import { WelcomeScreen } from './WelcomeScreen';
-import { SkillAssessmentScreen } from './SkillAssessmentScreen';
-import { PersonalizationScreen } from './PersonalizationScreen';
-import { EnglishLevel, LearningStyle } from '@/services/storage/userProfile';
+import { useComprehensiveOnboarding } from '../hooks/useComprehensiveOnboarding';
+import { Step1Welcome } from './Step1Welcome';
+import { Step2Situation } from './Step2Situation';
+import { Step3Quiz } from './Step3Quiz';
+import { Step4Preferences } from './Step4Preferences';
+import { Step5FocusAndTopics } from './Step5FocusAndTopics';
+import { Step6Completion } from './Step6Completion';
 
 export const OnboardingFlow: React.FC = () => {
-  const router = useRouter();
-  const { currentStep, onboardingData, isLoading, updateData, nextStep, previousStep, completeOnboarding } =
-    useOnboarding();
+  const {
+    currentStep,
+    onboardingData,
+    isLoading,
+    updateData,
+    nextStep,
+    previousStep,
+    completeOnboarding,
+  } = useComprehensiveOnboarding();
 
-  const handleWelcomeNext = (name: string) => {
-    updateData({ name });
-    nextStep();
-  };
+  switch (currentStep) {
+    case 'welcome':
+      return (
+        <Step1Welcome
+          onNext={(name) => {
+            updateData({ name });
+            nextStep();
+          }}
+        />
+      );
 
-  const handleSkillAssessmentNext = (englishLevel: EnglishLevel) => {
-    updateData({ englishLevel });
-    nextStep();
-  };
-
-  const handlePersonalizationComplete = async (data: {
-    interests: string[];
-    goals: string[];
-    learningStyle: LearningStyle;
-    dailyGoalMinutes: number;
-  }) => {
-    updateData(data);
-    const success = await completeOnboarding();
-    if (success) {
-      router.replace('/(tabs)');
-    }
-  };
-
-  return (
-    <View className="flex-1">
-      {currentStep === 0 && <WelcomeScreen onNext={handleWelcomeNext} />}
-      {currentStep === 1 && (
-        <SkillAssessmentScreen
-          name={onboardingData.name || ''}
-          onNext={handleSkillAssessmentNext}
+    case 'situation':
+      return (
+        <Step2Situation
+          name={onboardingData.name!}
+          onNext={(situation, primaryGoal, secondaryGoals) => {
+            updateData({ learningSituation: situation, primaryGoal, secondaryGoals });
+            nextStep();
+          }}
           onBack={previousStep}
         />
-      )}
-      {currentStep === 2 && (
-        <PersonalizationScreen
-          onComplete={handlePersonalizationComplete}
+      );
+
+    case 'quiz':
+      return (
+        <Step3Quiz
+          onNext={(level, score) => {
+            updateData({ englishLevel: level, quizScore: score });
+            nextStep();
+          }}
           onBack={previousStep}
-          loading={isLoading}
         />
-      )}
-    </View>
-  );
+      );
+
+    case 'conversation':
+      // Skip conversation sample for now, move directly to preferences
+      // You can implement this later for more detailed assessment
+      nextStep();
+      return null;
+
+    case 'teaching_style':
+    case 'corrections':
+    case 'pace':
+      // Combined into single preferences screen
+      return (
+        <Step4Preferences
+          onNext={(data) => {
+            updateData({
+              teachingStyle: data.teachingStyle,
+              formality: data.formality,
+              correctionFrequency: data.correctionFrequency,
+              explainCorrections: data.explainCorrections,
+              learningPace: data.learningPace,
+              dailyGoalMinutes: data.dailyGoalMinutes,
+              practiceFrequency: data.practiceFrequency,
+            });
+            // Skip to focus_areas step (we combined 3 steps)
+            nextStep();
+            nextStep();
+            nextStep();
+          }}
+          onBack={previousStep}
+        />
+      );
+
+    case 'focus_areas':
+    case 'topics':
+    case 'contexts':
+      // Combined into single focus & topics screen
+      return (
+        <Step5FocusAndTopics
+          onNext={(data) => {
+            updateData({
+              primaryFocusAreas: data.primaryFocusAreas,
+              secondaryFocusAreas: data.secondaryFocusAreas,
+              preferredTopics: data.preferredTopics,
+              learningStyle: data.learningStyle,
+              realWorldContexts: [], // Can be extracted from preferredTopics or situation
+            });
+            // Skip to completion (we combined 3 steps)
+            nextStep();
+            nextStep();
+            nextStep();
+          }}
+          onBack={previousStep}
+        />
+      );
+
+    case 'completion':
+      return (
+        <Step6Completion
+          name={onboardingData.name!}
+          englishLevel={onboardingData.englishLevel!}
+          primaryGoal={onboardingData.primaryGoal!}
+          isLoading={isLoading}
+          onComplete={completeOnboarding}
+        />
+      );
+
+    default:
+      return null;
+  }
 };
-

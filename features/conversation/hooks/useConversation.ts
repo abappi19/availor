@@ -9,6 +9,7 @@ import {
     conversationHistoryService,
     Message,
 } from '@/services/storage/conversationHistory';
+import { FileContext } from '@/features/file-context';
 import { useCallback, useEffect, useState } from 'react';
 
 export const useConversation = () => {
@@ -40,17 +41,32 @@ export const useConversation = () => {
         }
     };
 
-    const sendMessage = useCallback(async (content: string) => {
+    const sendMessage = useCallback(async (content: string, files: FileContext[] = []) => {
         if (!conversation || !content.trim()) return;
 
         setIsLoading(true);
         setError(null);
 
         try {
+            // Prepare user message content with file context
+            let messageContent = content.trim();
+            
+            // Add file context if files are attached
+            if (files.length > 0) {
+                const fileContexts = files
+                    .filter(f => f.status === 'ready' && f.extractedText)
+                    .map(f => `[File: ${f.name}]\n${f.extractedText}`)
+                    .join('\n\n');
+                
+                if (fileContexts) {
+                    messageContent = `${messageContent}\n\n---\nContext from uploaded files:\n${fileContexts}`;
+                }
+            }
+
             // Add user message
             const userMessage = await conversationHistoryService.addMessage(conversation.id, {
                 role: 'user',
-                content: content.trim(),
+                content: messageContent,
             });
 
             setMessages((prev) => [...prev, userMessage]);
@@ -58,23 +74,19 @@ export const useConversation = () => {
             // Show typing indicator
             setIsTyping(true);
 
-            // Prepare context for LLM
+            // Prepare context for LLM (system prompt is automatically injected by LLM service based on user personalization)
             const llmMessages: LLMMessage[] = [
-                {
-                    role: 'system',
-                    content: 'You are an encouraging and helpful English teacher. Help students improve their English through natural conversation, gentle corrections, and positive reinforcement. Keep responses concise and educational.',
-                },
                 ...messages.map((m) => ({
                     role: m.role,
                     content: m.content,
                 })),
                 {
                     role: 'user',
-                    content: content.trim(),
+                    content: messageContent,
                 },
             ];
 
-            // Get LLM response
+            // Get LLM response (personalized based on onboarding preferences and file context)
             const response = await llmService.generate(llmMessages);
 
             setIsTyping(false);

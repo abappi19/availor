@@ -13,7 +13,7 @@ export interface SkillAssessmentScreenProps {
   onBack: () => void;
 }
 
-const levels: Array<{ value: EnglishLevel; title: string; description: string }> = [
+const levels: { value: EnglishLevel; title: string; description: string }[] = [
   {
     value: 'A1',
     title: 'Beginner (A1)',
@@ -67,7 +67,7 @@ export const SkillAssessmentScreen: React.FC<SkillAssessmentScreenProps> = ({
             Hi {name}! 👋
           </Heading>
           <Text className="text-gray-600 text-lg">
-            Let's assess your current English level
+            Let&apos;s assess your current English level
           </Text>
         </AnimatedView>
 

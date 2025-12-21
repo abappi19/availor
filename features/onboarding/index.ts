@@ -1,6 +1,7 @@
-export * from './components/OnboardingFlow';
-export * from './components/WelcomeScreen';
-export * from './components/SkillAssessmentScreen';
-export * from './components/PersonalizationScreen';
-export * from './hooks/useOnboarding';
+/**
+ * Onboarding Feature - Public API
+ */
 
+export { OnboardingFlow } from './components/OnboardingFlow';
+export { useComprehensiveOnboarding } from './hooks/useComprehensiveOnboarding';
+export * from './types';

@@ -1,117 +1,110 @@
+/**
+ * Progress Screen
+ * Displays user progress, achievements, and statistics
+ */
+
 import React from 'react';
-import { View, ScrollView, SafeAreaView, RefreshControl } from 'react-native';
-import { Heading, Text } from '@/components/atoms/Text';
+import { View, Text, SafeAreaView, ScrollView } from 'react-native';
+import { Heading } from '@/components/atoms/Text';
 import { StreakCounter } from '@/components/molecules/StreakCounter';
 import { LevelBadge } from '@/components/molecules/LevelBadge';
 import { StatCard } from '@/components/molecules/StatCard';
-import { ProgressChart } from '@/features/progress/components/ProgressChart';
-import { useProgress } from '@/features/progress/hooks/useProgress';
+import { AchievementCard } from '@/components/molecules/AchievementCard';
 
 export default function ProgressScreen() {
-  const { profile, summary, isLoading, refreshProgress } = useProgress();
-
-  if (isLoading || !profile || !summary) {
-    return (
-      <SafeAreaView className="flex-1 bg-gray-50">
-        <View className="flex-1 items-center justify-center">
-          <Text>Loading...</Text>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
-  const weekLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  // TODO: Integrate with actual progress and gamification services
+  const mockData = {
+    streak: 7,
+    level: 5,
+    xp: 1250,
+    conversationsToday: 3,
+    wordsLearned: 45,
+    timeSpent: 35,
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
-      <ScrollView
-        className="flex-1"
-        contentContainerStyle={{ padding: 16 }}
-        refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refreshProgress} />}
-      >
+      <ScrollView className="flex-1">
         {/* Header */}
-        <View className="py-6">
+        <View className="bg-white p-6 border-b border-gray-200">
           <Heading level="h1" className="mb-2">
             Your Progress
           </Heading>
-          <Text variant="caption" size="lg">
-            Keep learning every day! 🚀
+          <Text className="text-gray-600">
+            Keep up the great work!
           </Text>
         </View>
 
-        {/* Level and Streak Row */}
-        <View className="flex-row justify-between mb-6">
-          <View className="flex-1 mr-3">
-            <LevelBadge
-              level={profile.level}
-              currentXP={profile.currentXP}
-              nextLevelXP={profile.nextLevelXP}
-              size="lg"
-            />
+        {/* Streak and Level */}
+        <View className="flex-row p-6 gap-4">
+          <View className="flex-1">
+            <StreakCounter count={mockData.streak} />
           </View>
-
-          <View className="flex-1 ml-3 justify-center">
-            <StreakCounter streakDays={profile.streak} isActive={true} />
+          <View className="flex-1">
+            <LevelBadge level={mockData.level} xp={mockData.xp} nextLevelXp={1500} />
           </View>
         </View>
 
-        {/* Stats Grid */}
-        <View className="flex-row flex-wrap justify-between mb-6">
-          <StatCard
+        {/* Today's Stats */}
+        <View className="px-6 mb-4">
+          <Text className="text-lg font-semibold text-gray-900 mb-3">
+            Today's Activity
+          </Text>
+          <View className="flex-row flex-wrap gap-3">
+            <View className="flex-1 min-w-[45%]">
+              <StatCard
+                value={mockData.conversationsToday.toString()}
+                label="Conversations"
+                icon="chatbubbles"
+              />
+            </View>
+            <View className="flex-1 min-w-[45%]">
+              <StatCard
+                value={mockData.wordsLearned.toString()}
+                label="Words Learned"
+                icon="book"
+              />
+            </View>
+            <View className="flex-1 min-w-[45%]">
+              <StatCard
+                value={`${mockData.timeSpent}m`}
+                label="Time Spent"
+                icon="time"
+              />
+            </View>
+          </View>
+        </View>
+
+        {/* Recent Achievements */}
+        <View className="px-6 mb-6">
+          <Text className="text-lg font-semibold text-gray-900 mb-3">
+            Recent Achievements
+          </Text>
+          <AchievementCard
+            title="Week Warrior"
+            description="Maintained a 7-day streak"
+            icon="flame"
+            unlocked={true}
+          />
+          <AchievementCard
+            title="Conversation Master"
+            description="Complete 50 conversations"
             icon="chatbubbles"
-            value={summary.totalSessions.toString()}
-            label="Conversations"
-            color="#2196F3"
-          />
-          <StatCard
-            icon="time"
-            value={`${summary.totalMinutes}m`}
-            label="Practice Time"
-            color="#4CAF50"
-          />
-          <StatCard
-            icon="trending-up"
-            value={profile.englishLevel}
-            label="English Level"
-            color="#FF9800"
-          />
-          <StatCard
-            icon="trophy"
-            value={profile.totalPoints.toString()}
-            label="Total Points"
-            color="#FFD700"
+            unlocked={false}
+            progress={30}
           />
         </View>
 
-        {/* Weekly Chart */}
-        <ProgressChart
-          data={summary.weeklyData}
-          labels={weekLabels}
-          title="This Week"
-        />
-
-        {/* Additional Info */}
-        <View className="bg-white rounded-2xl p-6 shadow-md mb-4">
-          <Text weight="semibold" size="lg" className="mb-4">
-            Quick Stats
+        {/* Coming Soon Notice */}
+        <View className="mx-6 mb-6 p-4 bg-primary-50 rounded-xl border border-primary-200">
+          <Text className="text-primary-700 font-medium mb-1">
+            📊 More detailed analytics coming soon!
           </Text>
-          <View className="space-y-3">
-            <View className="flex-row justify-between">
-              <Text variant="caption">Current Streak</Text>
-              <Text weight="semibold">{profile.streak} days</Text>
-            </View>
-            <View className="flex-row justify-between">
-              <Text variant="caption">Longest Streak</Text>
-              <Text weight="semibold">{profile.longestStreak} days</Text>
-            </View>
-            <View className="flex-row justify-between">
-              <Text variant="caption">Daily Goal</Text>
-              <Text weight="semibold">{profile.dailyGoalMinutes} minutes</Text>
-            </View>
-          </View>
+          <Text className="text-primary-600 text-sm">
+            Progress tracking, charts, and detailed insights are in development.
+          </Text>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
-

@@ -40,7 +40,7 @@ const goalOptions = [
   'Grammar and vocabulary',
 ];
 
-const learningStyles: Array<{ value: LearningStyle; label: string; icon: string }> = [
+const learningStyles: { value: LearningStyle; label: string; icon: string }[] = [
   { value: 'visual', label: 'Visual', icon: '👁️' },
   { value: 'auditory', label: 'Auditory', icon: '👂' },
   { value: 'reading', label: 'Reading/Writing', icon: '📖' },

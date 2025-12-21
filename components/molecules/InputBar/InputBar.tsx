@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ReactNode } from 'react';
 import { View, TextInput, TouchableOpacity, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -8,6 +8,7 @@ export interface InputBarProps {
   onAttachPress?: () => void;
   placeholder?: string;
   style?: ViewStyle;
+  leftAccessory?: ReactNode;
 }
 
 export const InputBar: React.FC<InputBarProps> = ({
@@ -16,6 +17,7 @@ export const InputBar: React.FC<InputBarProps> = ({
   onAttachPress,
   placeholder = 'Type a message...',
   style,
+  leftAccessory,
 }) => {
   const [message, setMessage] = useState('');
 
@@ -28,12 +30,12 @@ export const InputBar: React.FC<InputBarProps> = ({
 
   return (
     <View className="flex-row items-center bg-white border-t border-gray-200 px-4 py-3" style={style}>
-      {/* Attach button */}
-      {onAttachPress && (
+      {/* Left accessory or attach button */}
+      {leftAccessory || (onAttachPress && (
         <TouchableOpacity onPress={onAttachPress} className="mr-2">
           <Ionicons name="add-circle-outline" size={28} color="#757575" />
         </TouchableOpacity>
-      )}
+      ))}
 
       {/* Text input */}
       <View className="flex-1 bg-gray-100 rounded-full px-4 py-2 mr-2">

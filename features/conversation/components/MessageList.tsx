@@ -3,13 +3,15 @@ import { ScrollView, View } from 'react-native';
 import { UserMessage, AIMessage } from '@/components/molecules/MessageBubble';
 import { TypingIndicator } from './TypingIndicator';
 import { Message } from '@/services/storage/conversationHistory';
+import { TTSComponent } from '@/features/voice';
 
 export interface MessageListProps {
   messages: Message[];
   isTyping?: boolean;
+  ttsEnabled?: boolean;
 }
 
-export const MessageList: React.FC<MessageListProps> = ({ messages, isTyping = false }) => {
+export const MessageList: React.FC<MessageListProps> = ({ messages, isTyping = false, ttsEnabled = false }) => {
   const scrollViewRef = useRef<ScrollView>(null);
 
   // Auto-scroll to bottom when new messages arrive
@@ -32,11 +34,20 @@ export const MessageList: React.FC<MessageListProps> = ({ messages, isTyping = f
         </View>
       )}
 
-      {messages.map((message) =>
+      {messages.map((message, index) =>
         message.role === 'user' ? (
           <UserMessage key={message.id} message={message.content} timestamp={message.timestamp} />
         ) : (
-          <AIMessage key={message.id} message={message.content} timestamp={message.timestamp} />
+          <View key={message.id}>
+            <AIMessage message={message.content} timestamp={message.timestamp} />
+            {/* Conditionally render TTS component for AI messages when enabled */}
+            {ttsEnabled && (
+              <TTSComponent
+                text={message.content}
+                autoPlay={index === messages.length - 1} // Auto-play only the latest message
+              />
+            )}
+          </View>
         )
       )}
 

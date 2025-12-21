@@ -56,7 +56,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onNext }) => {
 
         <AnimatedView entering={FadeInDown.delay(500).duration(600)}>
           <Text className="text-white text-sm text-center opacity-75">
-            We'll help you improve your English through personalized lessons
+            We&apos;ll help you improve your English through personalized lessons
           </Text>
         </AnimatedView>
       </View>
