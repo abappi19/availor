@@ -5,7 +5,7 @@
  */
 
 import { Ionicons } from '@expo/vector-icons';
-import { Audio } from 'expo-av';
+import { Audio, RecordingPresets } from 'expo-audio';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { useAnimatedStyle, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
@@ -65,8 +65,8 @@ export const STTComponent: React.FC<STTComponentProps> = ({
   useEffect(() => {
     // Request permissions on mount
     (async () => {
-      const { status } = await Audio.requestPermissionsAsync();
-      if (status !== 'granted') {
+      const { granted } = await Audio.requestRecordingPermissionsAsync();
+      if (!granted) {
         onError?.('Microphone permission not granted');
       }
     })();
@@ -74,7 +74,7 @@ export const STTComponent: React.FC<STTComponentProps> = ({
     // Cleanup on unmount (free resources)
     return () => {
       if (recording) {
-        recording.stopAndUnloadAsync();
+        recording.stopAsync().then(() => recording.unloadAsync()).catch(console.error);
       }
     };
   }, []);
@@ -82,13 +82,13 @@ export const STTComponent: React.FC<STTComponentProps> = ({
   const startRecording = useCallback(async () => {
     try {
       await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
+        allowsRecording: true,
+        playsInSilentMode: true,
       });
 
-      const { recording: newRecording } = await Audio.Recording.createAsync(
-        Audio.RecordingOptionsPresets.HIGH_QUALITY
-      );
+      const newRecording = new Audio.Recording();
+      await newRecording.prepareAsync(RecordingPresets.HIGH_QUALITY);
+      await newRecording.startAsync();
 
       setRecording(newRecording);
       setIsRecording(true);
@@ -105,8 +105,9 @@ export const STTComponent: React.FC<STTComponentProps> = ({
     setIsProcessing(true);
 
     try {
-      await recording.stopAndUnloadAsync();
+      await recording.stopAsync();
       const uri = recording.getURI();
+      await recording.unloadAsync();
 
       if (uri) {
         // TODO: Replace with actual ExecuTorch transcription
