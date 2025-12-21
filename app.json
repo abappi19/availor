@@ -41,7 +41,15 @@
           }
         }
       ],
-      "expo-audio"
+      "expo-audio",
+      "expo-sqlite",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Availor to access your photos to upload images for learning context."
+        }
+      ],
+      "expo-document-picker"
     ],
     "experiments": {
       "typedRoutes": true,
