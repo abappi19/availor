@@ -63,24 +63,49 @@ export const TypingIndicator: React.FC = () => {
   }));
 
   return (
-    <View className="flex-row mb-4">
-      <View className="w-10 h-10 rounded-full bg-primary-100 items-center justify-center mr-3">
-        <View className="w-6 h-6 rounded-full bg-primary-500" />
+    <View style={{ flexDirection: 'row', marginBottom: 16 }}>
+      <View style={{ 
+        width: 40, 
+        height: 40, 
+        borderRadius: 20, 
+        backgroundColor: '#E3F2FD',
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        marginRight: 12 
+      }}>
+        <View style={{ width: 24, height: 24, borderRadius: 12, backgroundColor: '#2196F3' }} />
       </View>
 
-      <View className="bg-white rounded-2xl rounded-tl-sm px-6 py-4 shadow-md">
-        <View className="flex-row gap-2">
+      <View style={{ 
+        backgroundColor: '#fff', 
+        borderRadius: 16,
+        borderTopLeftRadius: 4,
+        paddingHorizontal: 24, 
+        paddingVertical: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+      }}>
+        <View style={{ flexDirection: 'row', gap: 8 }}>
           <Animated.View
-            className="w-2 h-2 rounded-full bg-gray-400"
-            style={dot1Style}
+            style={[
+              { width: 8, height: 8, borderRadius: 4, backgroundColor: '#9ca3af' },
+              dot1Style
+            ]}
           />
           <Animated.View
-            className="w-2 h-2 rounded-full bg-gray-400"
-            style={dot2Style}
+            style={[
+              { width: 8, height: 8, borderRadius: 4, backgroundColor: '#9ca3af' },
+              dot2Style
+            ]}
           />
           <Animated.View
-            className="w-2 h-2 rounded-full bg-gray-400"
-            style={dot3Style}
+            style={[
+              { width: 8, height: 8, borderRadius: 4, backgroundColor: '#9ca3af' },
+              dot3Style
+            ]}
           />
         </View>
       </View>

@@ -2,11 +2,12 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
+
 import '../global.css';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { useEffect, useState } from 'react';
 import { userProfileService } from '@/services/storage/userProfile';
+import { useEffect, useState } from 'react';
 
 export const unstable_settings = {
   initialRouteName: 'onboarding',
@@ -44,5 +45,6 @@ export default function RootLayout() {
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
+
   );
 }

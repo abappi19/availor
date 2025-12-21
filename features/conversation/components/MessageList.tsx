@@ -1,9 +1,10 @@
-import React, { useRef, useEffect } from 'react';
-import { ScrollView, View } from 'react-native';
-import { UserMessage, AIMessage } from '@/components/molecules/MessageBubble';
-import { TypingIndicator } from './TypingIndicator';
-import { Message } from '@/services/storage/conversationHistory';
+import { EmptyState } from '@/components/molecules/EmptyState';
+import { AIMessage, UserMessage } from '@/components/molecules/MessageBubble';
 import { TTSComponent } from '@/features/voice';
+import { Message } from '@/services/storage/conversationHistory';
+import React, { useEffect, useRef } from 'react';
+import { ScrollView, View } from 'react-native';
+import { TypingIndicator } from './TypingIndicator';
 
 export interface MessageListProps {
   messages: Message[];
@@ -24,16 +25,25 @@ export const MessageList: React.FC<MessageListProps> = ({ messages, isTyping = f
   return (
     <ScrollView
       ref={scrollViewRef}
-      className="flex-1 px-4"
-      contentContainerStyle={{ paddingTop: 16, paddingBottom: 16 }}
+      style={{ flex: 1, backgroundColor: '#f9fafb' }}
+      contentContainerStyle={{
+        flexGrow: 1,
+        paddingHorizontal: 16,
+        paddingTop: 16,
+        paddingBottom: 16,
+      }}
       showsVerticalScrollIndicator={false}
     >
-      {messages.length === 0 && (
-        <View className="flex-1 items-center justify-center py-20">
-          <AIMessage message="Hello! I'm your AI English teacher. I'm here to help you improve your English skills. What would you like to practice today?" />
-        </View>
+      {/* Empty State */}
+      {messages.length === 0 && !isTyping && (
+        <EmptyState
+          icon="chatbubbles-outline"
+          title="Start a Conversation"
+          message="Hello! I'm your AI English teacher. I'm here to help you improve your English skills. What would you like to practice today?"
+        />
       )}
 
+      {/* Messages */}
       {messages.map((message, index) =>
         message.role === 'user' ? (
           <UserMessage key={message.id} message={message.content} timestamp={message.timestamp} />
@@ -51,6 +61,7 @@ export const MessageList: React.FC<MessageListProps> = ({ messages, isTyping = f
         )
       )}
 
+      {/* Typing Indicator */}
       {isTyping && <TypingIndicator />}
     </ScrollView>
   );

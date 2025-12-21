@@ -12,25 +12,52 @@ const AnimatedView = Animated.createAnimatedComponent(View);
 
 export const AIMessage: React.FC<AIMessageProps> = ({ message, timestamp }) => {
   return (
-    <AnimatedView entering={FadeInRight.duration(300)} className="flex-row mb-4">
+    <AnimatedView 
+      entering={FadeInRight.duration(300)} 
+      style={{ flexDirection: 'row', marginBottom: 16 }}
+    >
       {/* AI Avatar */}
-      <View className="w-10 h-10 rounded-full items-center justify-center mr-3 overflow-hidden">
+      <View style={{ 
+        width: 40, 
+        height: 40, 
+        borderRadius: 20, 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        marginRight: 12,
+        overflow: 'hidden'
+      }}>
         <LinearGradient
           colors={['#2196F3', '#7B1FA2']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          className="w-full h-full items-center justify-center"
+          style={{ 
+            width: '100%', 
+            height: '100%', 
+            alignItems: 'center', 
+            justifyContent: 'center' 
+          }}
         >
-          <Text className="text-white font-bold text-lg">AI</Text>
+          <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 18 }}>AI</Text>
         </LinearGradient>
       </View>
 
       {/* Message Bubble */}
-      <View className="flex-1 max-w-[75%]">
-        <View className="bg-white rounded-2xl rounded-tl-sm px-4 py-3 shadow-md">
-          <Text className="text-gray-900 text-base leading-relaxed">{message}</Text>
+      <View style={{ flex: 1, maxWidth: '75%' }}>
+        <View style={{ 
+          backgroundColor: '#fff', 
+          borderRadius: 16,
+          borderTopLeftRadius: 4,
+          paddingHorizontal: 16, 
+          paddingVertical: 12,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 4,
+          elevation: 3,
+        }}>
+          <Text style={{ color: '#111827', fontSize: 16, lineHeight: 24 }}>{message}</Text>
           {timestamp && (
-            <Text className="text-gray-500 text-xs mt-1">
+            <Text style={{ color: '#6b7280', fontSize: 12, marginTop: 4 }}>
               {new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </Text>
           )}
