@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 import Animated, { FadeInLeft } from 'react-native-reanimated';
 
 export interface UserMessageProps {
@@ -11,20 +11,20 @@ const AnimatedView = Animated.createAnimatedComponent(View);
 
 export const UserMessage: React.FC<UserMessageProps> = ({ message, timestamp }) => {
   return (
-    <AnimatedView 
-      entering={FadeInLeft.duration(300)} 
-      style={{ 
-        flexDirection: 'row', 
-        justifyContent: 'flex-end', 
-        marginBottom: 16 
+    <AnimatedView
+      entering={FadeInLeft.duration(300)}
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        marginBottom: 16
       }}
     >
-      <View style={{ 
-        maxWidth: '80%', 
-        backgroundColor: '#2196F3', 
-        borderRadius: 16, 
+      <View style={{
+        maxWidth: '80%',
+        backgroundColor: '#2196F3',
+        borderRadius: 16,
         borderTopRightRadius: 4,
-        paddingHorizontal: 16, 
+        paddingHorizontal: 16,
         paddingVertical: 12,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },

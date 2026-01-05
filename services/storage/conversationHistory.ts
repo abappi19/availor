@@ -80,11 +80,13 @@ class ConversationHistoryService {
   /**
    * Add a message to a conversation
    */
-  async addMessage(conversationId: string, message: Omit<Message, 'id' | 'timestamp'>): Promise<Message> {
+  async addMessage(conversationId: string, message: Omit<Message, 'id' | 'timestamp'> & {
+    id?: string;
+  }): Promise<Message> {
     const newMessage: Message = {
-      id: Date.now().toString() + Math.random(),
-      timestamp: Date.now(),
       ...message,
+      timestamp: Date.now(),
+      id: message.id ?? Date.now().toString() + Math.random(),
     };
 
     const conversations = await this.getAllConversations();

@@ -1,10 +1,14 @@
-// /**
-//  * Configuration for Availor LLM feature
-//  */
+/**
+ * Configuration for Availor LLM feature
+ */
 
-// import { Asset } from 'expo-asset';
+import { ChatConfig, DEFAULT_SYSTEM_PROMPT, GenerationConfig, ToolsConfig } from "react-native-executorch";
 
-// export const DEFAULT_SYSTEM_PROMPT =
+// Re-export DEFAULT_SYSTEM_PROMPT for convenience
+export { DEFAULT_SYSTEM_PROMPT };
+
+// Custom system prompt for Availor (currently using default from library)
+// export const AVAILOR_SYSTEM_PROMPT =
 //     "You are a helpful and friendly English teacher. Help users improve their English through conversation, provide corrections when needed, and explain grammar concepts clearly.";
 
 // /**
@@ -31,3 +35,21 @@
 //         tokenizerConfigSource: tokenizerConfigAsset.localUri || tokenizerConfigAsset.uri,
 //     };
 // };
+
+type AvailorLLMConfiguration = {
+    chatConfig?: Partial<ChatConfig>;
+    toolsConfig?: ToolsConfig;
+    generationConfig?: GenerationConfig;
+}
+
+export const getAvailorLLMConfiguration = ({ chatConfig, toolsConfig, generationConfig, }: AvailorLLMConfiguration): AvailorLLMConfiguration => {
+    return {
+        chatConfig: {
+            systemPrompt: DEFAULT_SYSTEM_PROMPT,
+            ...chatConfig
+        },
+        generationConfig: generationConfig
+        ,
+        toolsConfig: toolsConfig
+    };
+};

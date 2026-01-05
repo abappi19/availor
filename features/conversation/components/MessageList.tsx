@@ -4,23 +4,23 @@ import { TTSComponent } from '@/features/voice';
 import { Message } from '@/services/storage/conversationHistory';
 import React, { useEffect, useRef } from 'react';
 import { ScrollView, View } from 'react-native';
-import { TypingIndicator } from './TypingIndicator';
 
 export interface MessageListProps {
   messages: Message[];
   isTyping?: boolean;
   ttsEnabled?: boolean;
+  aiTypingMessage: string;
 }
 
-export const MessageList: React.FC<MessageListProps> = ({ messages, isTyping = false, ttsEnabled = false }) => {
+export const MessageList: React.FC<MessageListProps> = ({ messages, isTyping = false, ttsEnabled = false, aiTypingMessage }) => {
   const scrollViewRef = useRef<ScrollView>(null);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     setTimeout(() => {
       scrollViewRef.current?.scrollToEnd({ animated: true });
-    }, 100);
-  }, [messages.length, isTyping]);
+    }, 300);
+  }, [messages.length, isTyping, aiTypingMessage]);
 
   return (
     <ScrollView
@@ -62,7 +62,9 @@ export const MessageList: React.FC<MessageListProps> = ({ messages, isTyping = f
       )}
 
       {/* Typing Indicator */}
-      {isTyping && <TypingIndicator />}
+      {/* {isTyping && (!aiTypingMessage ? <TypingIndicator /> : <View style={{ marginBottom: 16 }}>
+        <AIMessage message={aiTypingMessage} />
+      </View>)} */}
     </ScrollView>
   );
 };
