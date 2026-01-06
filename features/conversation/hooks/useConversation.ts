@@ -31,7 +31,6 @@ export const useConversation = () => {
 
     useEffect(() => {
         if (isConversationLoaded && availorLLM.isReady && !modelConfigured.current) {
-            console.log('configuring model', messages);
             availorLLM.configure({
                 chatConfig: {
                     initialMessageHistory: messages,
@@ -39,7 +38,6 @@ export const useConversation = () => {
 
                 },
             });
-            console.log('model configured', availorLLM.messageHistory);
             modelConfigured.current = true;
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -159,15 +157,7 @@ export const useConversation = () => {
             // Generate LLM response with tool support
             // The generate method uses the configured message history
             // Response will be handled by the useEffect watching availorLLM.response
-            await availorLLM.generate([
-                {
-                    role: 'user',
-                    content: messageContent,
-                }
-            ], toolDefinitions);
-
-            console.log('Generation complete');
-            console.log('availorLLM.messageHistory:', availorLLM.messageHistory);
+            await availorLLM.sendMessage(messageContent);
 
         } catch (err) {
             console.error('Error sending message:', err);
@@ -175,7 +165,7 @@ export const useConversation = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [conversationId, availorLLM, toolDefinitions]);
+    }, [conversationId, availorLLM.sendMessage]);
 
     const clearConversation = useCallback(async () => {
         if (!conversationId) return;
