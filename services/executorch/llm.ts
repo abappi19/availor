@@ -1,7 +1,7 @@
 /**
  * @deprecated Use features/llm/useAvailorLLM instead
  * This file is kept for backward compatibility only
- * 
+ *
  * LLM Service - Wrapper for React Native ExecuTorch useLLM hook
  * Integrates with AI Personalization to provide customized teaching behavior
  */
@@ -29,7 +29,6 @@ export interface LLMResponse {
  * TODO: Replace with actual react-native-executorch useLLM hook when available
  */
 class LLMService {
-    private config: LLMConfig;
     private systemPrompt: string | null = null;
     private systemPromptLoaded: boolean = false;
 
@@ -76,7 +75,7 @@ class LLMService {
         const systemPrompt = await this.loadSystemPrompt();
 
         // Inject system prompt if not already present
-        const messagesWithSystem = messages.find(m => m.role === 'system')
+        const messagesWithSystem = messages.find((m) => m.role === 'system')
             ? messages
             : [{ role: 'system' as const, content: systemPrompt }, ...messages];
 
@@ -133,7 +132,7 @@ class LLMService {
             if (focusesOnVocabulary) {
                 return "Excellent! Building vocabulary is one of your main goals. I can help you learn new words in context. Let's focus on topics that interest you most.";
             }
-            return "Vocabulary building is excellent! I can help you learn new words in context. What topics interest you? Business, travel, daily life, or something else?";
+            return 'Vocabulary building is excellent! I can help you learn new words in context. What topics interest you? Business, travel, daily life, or something else?';
         }
 
         // Conversation practice
@@ -147,23 +146,23 @@ class LLMService {
         if (isEncouraging) {
             responses = [
                 "That's fantastic! 🎉 Can you tell me more about that? Try to use complete sentences and I'll help you refine your expression.",
-                "Wonderful effort! Let me help you take it to the next level. Have you considered using more descriptive words?",
+                'Wonderful effort! Let me help you take it to the next level. Have you considered using more descriptive words?',
                 "I love that! Let's practice expressing that idea in different ways to build your vocabulary.",
                 "Amazing! Now, let's take it a step further. Can you elaborate on that thought?",
-                "Excellent work! Your English is improving with every message. Keep up the great work!",
+                'Excellent work! Your English is improving with every message. Keep up the great work!',
             ];
         } else if (isDirect) {
             responses = [
-                "Understood. Can you provide more details? Use complete sentences.",
+                'Understood. Can you provide more details? Use complete sentences.',
                 "Let's improve that. Consider using more descriptive vocabulary.",
                 "Try expressing that differently. What's another way to say it?",
-                "Elaborate on that point. Add more context.",
+                'Elaborate on that point. Add more context.',
                 "Good. Continue practicing and you'll see improvement.",
             ];
         } else {
             responses = [
                 "That's interesting! Can you tell me more about that? Try to use complete sentences.",
-                "Good effort! Let me help you improve that. Have you considered using more descriptive words?",
+                'Good effort! Let me help you improve that. Have you considered using more descriptive words?',
                 "I see what you mean. Let's practice expressing that idea in different ways to build your vocabulary.",
                 "Great! Now, let's take it a step further. Can you elaborate on that thought?",
                 "Excellent! Your English is improving. Keep practicing and you'll get even better!",
@@ -195,4 +194,3 @@ export const useLLM = () => {
         error: null,
     };
 };
-

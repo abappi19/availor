@@ -5,46 +5,45 @@ import 'react-native-reanimated';
 
 import '../global.css';
 
+import { useEffect, useState } from 'react';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { userProfileService } from '@/services/storage/userProfile';
-import { useEffect, useState } from 'react';
 
 export const unstable_settings = {
-  initialRouteName: 'onboarding',
+    initialRouteName: 'onboarding',
 };
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean | null>(null);
+    const colorScheme = useColorScheme();
+    const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean | null>(null);
 
-  useEffect(() => {
-    checkOnboardingStatus();
-  }, []);
+    useEffect(() => {
+        checkOnboardingStatus();
+    }, [checkOnboardingStatus]);
 
-  const checkOnboardingStatus = async () => {
-    const profile = await userProfileService.getProfile();
-    setHasCompletedOnboarding(profile?.hasCompletedOnboarding ?? false);
-  };
+    const checkOnboardingStatus = async () => {
+        const profile = await userProfileService.getProfile();
+        setHasCompletedOnboarding(profile?.hasCompletedOnboarding ?? false);
+    };
 
-  if (hasCompletedOnboarding === null) {
-    // Loading state
-    return null;
-  }
+    if (hasCompletedOnboarding === null) {
+        // Loading state
+        return null;
+    }
 
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }}>
-        {!hasCompletedOnboarding ? (
-          <Stack.Screen name="onboarding/index" options={{ headerShown: false }} />
-        ) : (
-          <>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-          </>
-        )}
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-
-  );
+    return (
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <Stack screenOptions={{ headerShown: false }}>
+                {!hasCompletedOnboarding ? (
+                    <Stack.Screen name="onboarding/index" options={{ headerShown: false }} />
+                ) : (
+                    <>
+                        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+                    </>
+                )}
+            </Stack>
+            <StatusBar style="auto" />
+        </ThemeProvider>
+    );
 }

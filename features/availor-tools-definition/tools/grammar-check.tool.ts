@@ -24,4 +24,3 @@ export const grammarCheckTool: AvailorTool = {
         return `Grammar check complete for: "${params.text}"`;
     },
 };
-

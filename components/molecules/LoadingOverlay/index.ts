@@ -1,3 +1,2 @@
-export { LoadingOverlay } from './LoadingOverlay';
 export type { LoadingOverlayProps } from './LoadingOverlay';
-
+export { LoadingOverlay } from './LoadingOverlay';

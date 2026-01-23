@@ -6,12 +6,12 @@
 import { ConversationScreen } from '@/features/conversation';
 
 export default function HomeScreen() {
-  // useEffect(() => {
-  //   AsyncStorage.getItem('hasCompletedOnboarding').then((value) => {
-  //     if (!value) {
-  //       router.push('/onboarding');
-  //     }
-  //   });
-  // }, []);
-  return <ConversationScreen />;
+    // useEffect(() => {
+    //   AsyncStorage.getItem('hasCompletedOnboarding').then((value) => {
+    //     if (!value) {
+    //       router.push('/onboarding');
+    //     }
+    //   });
+    // }, []);
+    return <ConversationScreen />;
 }

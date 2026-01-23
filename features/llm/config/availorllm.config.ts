@@ -2,7 +2,12 @@
  * Configuration for Availor LLM feature
  */
 
-import { ChatConfig, DEFAULT_SYSTEM_PROMPT, GenerationConfig, ToolsConfig } from "react-native-executorch";
+import {
+    type ChatConfig,
+    DEFAULT_SYSTEM_PROMPT,
+    type GenerationConfig,
+    type ToolsConfig,
+} from 'react-native-executorch';
 
 // Re-export DEFAULT_SYSTEM_PROMPT for convenience
 export { DEFAULT_SYSTEM_PROMPT };
@@ -40,16 +45,19 @@ type AvailorLLMConfiguration = {
     chatConfig?: Partial<ChatConfig>;
     toolsConfig?: ToolsConfig;
     generationConfig?: GenerationConfig;
-}
+};
 
-export const getAvailorLLMConfiguration = ({ chatConfig, toolsConfig, generationConfig, }: AvailorLLMConfiguration): AvailorLLMConfiguration => {
+export const getAvailorLLMConfiguration = ({
+    chatConfig,
+    toolsConfig,
+    generationConfig,
+}: AvailorLLMConfiguration): AvailorLLMConfiguration => {
     return {
         chatConfig: {
             systemPrompt: DEFAULT_SYSTEM_PROMPT,
-            ...chatConfig
+            ...chatConfig,
         },
-        generationConfig: generationConfig
-        ,
-        toolsConfig: toolsConfig
+        generationConfig: generationConfig,
+        toolsConfig: toolsConfig,
     };
 };

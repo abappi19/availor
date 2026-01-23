@@ -2,7 +2,7 @@
  * Achievement Definitions and Management
  */
 
-import { Ionicons } from '@expo/vector-icons';
+import type { Ionicons } from '@expo/vector-icons';
 
 export type AchievementCategory = 'streak' | 'conversation' | 'practice' | 'milestone';
 
@@ -142,4 +142,3 @@ export const achievementDefinitions: Achievement[] = [
         rewardPoints: 1000,
     },
 ];
-

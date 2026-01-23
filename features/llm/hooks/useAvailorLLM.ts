@@ -3,7 +3,7 @@
  * Main LLM hook wrapping React Native ExecuTorch useLLM
  */
 
-import { LLMType, SMOLLM2_1_360M_QUANTIZED, useLLM } from 'react-native-executorch';
+import { type LLMType, SMOLLM2_1_360M_QUANTIZED, useLLM } from 'react-native-executorch';
 // import { DEFAULT_SYSTEM_PROMPT, loadHammerModel } from '../config/availorllm.config';
 
 export const useAvailorLLM = (): LLMType => {
@@ -21,7 +21,5 @@ export const useAvailorLLM = (): LLMType => {
         preventLoad: false,
     });
 
-
     return llm;
 };
-

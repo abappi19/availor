@@ -23,4 +23,3 @@ export interface TTSState {
     isPaused: boolean;
     currentText: string | null;
 }
-

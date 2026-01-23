@@ -3,24 +3,20 @@
  * Manages conversation state and interactions with LLM
  */
 
-import { getToolDefinitions } from '@/features/availor-tools-definition';
-import { FileContext } from '@/features/file-context';
-import { DEFAULT_SYSTEM_PROMPT, useAvailorLLM } from '@/features/llm';
-import {
-    conversationHistoryService,
-    Message
-} from '@/services/storage/conversationHistory';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { getToolDefinitions } from '@/features/availor-tools-definition';
+import type { FileContext } from '@/features/file-context';
+import { DEFAULT_SYSTEM_PROMPT, useAvailorLLM } from '@/features/llm';
+import { conversationHistoryService, type Message } from '@/services/storage/conversationHistory';
 //TODO: use this to clear all conversations
 // conversationHistoryService.clearAll()
 export const useConversation = () => {
     const availorLLM = useAvailorLLM();
-    const toolDefinitions = getToolDefinitions();
+    const _toolDefinitions = getToolDefinitions();
 
     const [isConversationLoaded, setIsConversationLoaded] = useState(false);
     const [conversationId, setConversationId] = useState<string | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
-
 
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -35,18 +31,17 @@ export const useConversation = () => {
                 chatConfig: {
                     initialMessageHistory: messages,
                     systemPrompt: DEFAULT_SYSTEM_PROMPT,
-
                 },
             });
             modelConfigured.current = true;
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isConversationLoaded, availorLLM.isReady]);
+    }, [isConversationLoaded, availorLLM.isReady, availorLLM.configure, messages]);
 
     // Load current conversation on mount
     useEffect(() => {
         loadCurrentConversation();
-    }, []);
+    }, [loadCurrentConversation]);
 
     // Track if we've already processed the current response to avoid duplicates
     const lastProcessedResponse = useRef<string>('');
@@ -67,23 +62,25 @@ export const useConversation = () => {
         }
 
         // Save AI response to storage and add to state
-        conversationHistoryService.addMessage(conversationId, {
-            role: 'assistant',
-            content: availorLLM.response,
-            id: typingMessageId.current,
-        }).then((aiMessage) => {
-            setMessages((prev) => {
-                // Check if this message is already in the list to avoid duplicates
-                const exists = prev.some(m => m.id === aiMessage.id);
-                if (exists) return prev;
-                return [...prev, aiMessage];
-            });
-        }).catch(console.error);
+        conversationHistoryService
+            .addMessage(conversationId, {
+                role: 'assistant',
+                content: availorLLM.response,
+                id: typingMessageId.current,
+            })
+            .then((aiMessage) => {
+                setMessages((prev) => {
+                    // Check if this message is already in the list to avoid duplicates
+                    const exists = prev.some((m) => m.id === aiMessage.id);
+                    if (exists) return prev;
+                    return [...prev, aiMessage];
+                });
+            })
+            .catch(console.error);
 
         if (!availorLLM.isGenerating) {
             typingMessageId.current = null;
-        };
-
+        }
     }, [availorLLM.response, availorLLM.isGenerating, conversationId]);
 
     const loadCurrentConversation = async () => {
@@ -104,68 +101,70 @@ export const useConversation = () => {
         }
     };
 
-    const sendMessage = useCallback(async (content: string, files: FileContext[] = []) => {
-        if (!conversationId || !content.trim()) return;
+    const sendMessage = useCallback(
+        async (content: string, files: FileContext[] = []) => {
+            if (!conversationId || !content.trim()) return;
 
-        setIsLoading(true);
-        setError(null);
+            setIsLoading(true);
+            setError(null);
 
-        try {
-            // Prepare user message content with file context
-            let messageContent = content.trim();
+            try {
+                // Prepare user message content with file context
+                let messageContent = content.trim();
 
-            // Add file context if files are attached
-            if (files.length > 0) {
-                const fileContexts = files
-                    .filter(f => f.status === 'ready' && f.extractedText)
-                    .map(f => `[File: ${f.name}]\n${f.extractedText}`)
-                    .join('\n\n');
+                // Add file context if files are attached
+                if (files.length > 0) {
+                    const fileContexts = files
+                        .filter((f) => f.status === 'ready' && f.extractedText)
+                        .map((f) => `[File: ${f.name}]\n${f.extractedText}`)
+                        .join('\n\n');
 
-                if (fileContexts) {
-                    messageContent = `${messageContent}\n\n---\nContext from uploaded files:\n${fileContexts}`;
+                    if (fileContexts) {
+                        messageContent = `${messageContent}\n\n---\nContext from uploaded files:\n${fileContexts}`;
+                    }
                 }
+
+                // Add user message
+                // const userMessage = await conversationHistoryService.addMessage(conversationId, {
+                //     role: 'user',
+                //     content: messageContent,
+                // });
+
+                // setMessages((prev) => [...prev, userMessage]);
+
+                // Prepare context for LLM (system prompt is automatically configured in useAvailorLLM)
+                // const llmMessages: AvailorLLMMessage[] = [
+                //     ...messages.map((m) => ({
+                //         role: m.role as 'user' | 'assistant',
+                //         content: m.content,
+                //     })),
+                //     {
+                //         role: 'user' as const,
+                //         content: messageContent,
+                //     },
+                // ];
+
+                // Save user message to storage and add to state
+                const userMessage = await conversationHistoryService.addMessage(conversationId, {
+                    role: 'user',
+                    content: messageContent,
+                });
+
+                setMessages((prev) => [...prev, userMessage]);
+
+                // Generate LLM response with tool support
+                // The generate method uses the configured message history
+                // Response will be handled by the useEffect watching availorLLM.response
+                await availorLLM.sendMessage(messageContent);
+            } catch (err) {
+                console.error('Error sending message:', err);
+                setError('Failed to send message');
+            } finally {
+                setIsLoading(false);
             }
-
-            // Add user message
-            // const userMessage = await conversationHistoryService.addMessage(conversationId, {
-            //     role: 'user',
-            //     content: messageContent,
-            // });
-
-            // setMessages((prev) => [...prev, userMessage]);
-
-            // Prepare context for LLM (system prompt is automatically configured in useAvailorLLM)
-            // const llmMessages: AvailorLLMMessage[] = [
-            //     ...messages.map((m) => ({
-            //         role: m.role as 'user' | 'assistant',
-            //         content: m.content,
-            //     })),
-            //     {
-            //         role: 'user' as const,
-            //         content: messageContent,
-            //     },
-            // ];
-
-            // Save user message to storage and add to state
-            const userMessage = await conversationHistoryService.addMessage(conversationId, {
-                role: 'user',
-                content: messageContent,
-            });
-
-            setMessages((prev) => [...prev, userMessage]);
-
-            // Generate LLM response with tool support
-            // The generate method uses the configured message history
-            // Response will be handled by the useEffect watching availorLLM.response
-            await availorLLM.sendMessage(messageContent);
-
-        } catch (err) {
-            console.error('Error sending message:', err);
-            setError('Failed to send message');
-        } finally {
-            setIsLoading(false);
-        }
-    }, [conversationId, availorLLM.sendMessage]);
+        },
+        [conversationId, availorLLM.sendMessage]
+    );
 
     const clearConversation = useCallback(async () => {
         if (!conversationId) return;
@@ -182,7 +181,6 @@ export const useConversation = () => {
     }, [conversationId]);
 
     useEffect(() => {
-
         console.log('availorLLM.messageHistory:', availorLLM.messageHistory);
     }, [availorLLM.messageHistory]);
 
@@ -197,4 +195,3 @@ export const useConversation = () => {
         clearConversation,
     };
 };
-
