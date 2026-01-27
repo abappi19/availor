@@ -99,7 +99,14 @@ class ConversationHistoryService {
             throw new Error('Conversation not found');
         }
 
-        conversations[conversationIndex].messages.push(newMessage);
+        const existingMessageIndex = conversations[conversationIndex].messages.findIndex((m) => m.id === newMessage.id);
+
+        if (existingMessageIndex !== -1) {
+            conversations[conversationIndex].messages[existingMessageIndex] = newMessage;
+        } else {
+            conversations[conversationIndex].messages.push(newMessage);
+        }
+
         conversations[conversationIndex].lastUpdatedAt = Date.now();
 
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(conversations));

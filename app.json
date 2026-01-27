@@ -49,7 +49,8 @@
           "photosPermission": "Allow Availor to access your photos to upload images for learning context."
         }
       ],
-      "expo-document-picker"
+      "expo-document-picker",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,

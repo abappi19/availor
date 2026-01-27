@@ -1,31 +1,103 @@
-import React, { useEffect, useRef } from 'react';
-import { ScrollView, View } from 'react-native';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { AIMessage, UserMessage } from '@/components/molecules/MessageBubble';
 import { TTSComponent } from '@/features/voice';
 import type { Message } from '@/services/storage/conversationHistory';
+import { LinearGradient } from 'expo-linear-gradient';
+import React, { memo, useEffect, useRef } from 'react';
+import { ScrollView, Text, View } from 'react-native';
 
 export interface MessageListProps {
     messages: Message[];
-    isTyping?: boolean;
+    streamingResponse?: string | null;
     ttsEnabled?: boolean;
-    aiTypingMessage: string;
 }
 
-export const MessageList: React.FC<MessageListProps> = ({
-    messages,
-    isTyping = false,
-    ttsEnabled = false,
-    aiTypingMessage,
-}) => {
+// Optimized streaming bubble - minimal re-renders, no shadows (they cause flicker)
+const StreamingBubble = memo<{ text: string }>(({ text }) => (
+    <View style={{ flexDirection: 'row', marginBottom: 16 }}>
+        {/* AI Avatar */}
+        <View
+            style={{
+                width: 40,
+                height: 40,
+                borderRadius: 20,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: 12,
+                overflow: 'hidden',
+            }}
+        >
+            <LinearGradient
+                colors={['#2196F3', '#7B1FA2']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{
+                    width: '100%',
+                    height: '100%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
+                <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 18 }}>AI</Text>
+            </LinearGradient>
+        </View>
+
+        {/* Message Bubble - no shadow to prevent flicker */}
+        <View style={{ flex: 1, maxWidth: '75%' }}>
+            <View
+                style={{
+                    backgroundColor: '#fff',
+                    borderRadius: 16,
+                    borderTopLeftRadius: 4,
+                    paddingHorizontal: 16,
+                    paddingVertical: 12,
+                    borderWidth: 1,
+                    borderColor: '#e5e7eb',
+                }}
+            >
+                <Text style={{ color: '#111827', fontSize: 16, lineHeight: 24 }}>
+                    {text}
+                    <Text style={{ color: '#2196F3' }}>▊</Text>
+                </Text>
+            </View>
+        </View>
+    </View>
+));
+
+// Memoized saved messages list - won't re-render when streaming updates
+const SavedMessages = memo<{
+    messages: Message[];
+    ttsEnabled: boolean;
+    hasStreaming: boolean;
+}>(({ messages, ttsEnabled, hasStreaming }) => (
+    <>
+        {messages.map((message, index) =>
+            message.role === 'user' ? (
+                <UserMessage key={message.id} message={message.content} timestamp={message.timestamp} />
+            ) : (
+                <View key={message.id}>
+                    <AIMessage message={message.content} timestamp={message.timestamp} />
+                    {ttsEnabled && !hasStreaming && index === messages.length - 1 && (
+                        <TTSComponent text={message.content} autoPlay />
+                    )}
+                </View>
+            )
+        )}
+    </>
+));
+
+export const MessageList: React.FC<MessageListProps> = ({ messages, streamingResponse, ttsEnabled = false }) => {
     const scrollViewRef = useRef<ScrollView>(null);
 
-    // Auto-scroll to bottom when new messages arrive
+    // Auto-scroll when messages change or streaming updates
     useEffect(() => {
-        setTimeout(() => {
+        const timer = setTimeout(() => {
             scrollViewRef.current?.scrollToEnd({ animated: true });
-        }, 300);
-    }, []);
+        }, 100);
+        return () => clearTimeout(timer);
+    }, [messages.length, streamingResponse]);
+
+    const isEmpty = messages.length === 0 && !streamingResponse;
 
     return (
         <ScrollView
@@ -40,7 +112,7 @@ export const MessageList: React.FC<MessageListProps> = ({
             showsVerticalScrollIndicator={false}
         >
             {/* Empty State */}
-            {messages.length === 0 && !isTyping && (
+            {isEmpty && (
                 <EmptyState
                     icon="chatbubbles-outline"
                     title="Start a Conversation"
@@ -48,28 +120,11 @@ export const MessageList: React.FC<MessageListProps> = ({
                 />
             )}
 
-            {/* Messages */}
-            {messages.map((message, index) =>
-                message.role === 'user' ? (
-                    <UserMessage key={message.id} message={message.content} timestamp={message.timestamp} />
-                ) : (
-                    <View key={message.id}>
-                        <AIMessage message={message.content} timestamp={message.timestamp} />
-                        {/* Conditionally render TTS component for AI messages when enabled */}
-                        {ttsEnabled && (
-                            <TTSComponent
-                                text={message.content}
-                                autoPlay={index === messages.length - 1} // Auto-play only the latest message
-                            />
-                        )}
-                    </View>
-                )
-            )}
+            {/* Saved Messages - memoized, won't re-render during streaming */}
+            <SavedMessages messages={messages} ttsEnabled={ttsEnabled} hasStreaming={!!streamingResponse} />
 
-            {/* Typing Indicator */}
-            {/* {isTyping && (!aiTypingMessage ? <TypingIndicator /> : <View style={{ marginBottom: 16 }}>
-        <AIMessage message={aiTypingMessage} />
-      </View>)} */}
+            {/* Streaming Response - optimized, no shadows */}
+            {streamingResponse && <StreamingBubble text={streamingResponse} />}
         </ScrollView>
     );
 };

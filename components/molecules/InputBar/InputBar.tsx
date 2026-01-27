@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { type ReactNode, useState } from 'react';
-import { TextInput, TouchableOpacity, View, type ViewStyle } from 'react-native';
+import { ActivityIndicator, TextInput, TouchableOpacity, View, type ViewStyle } from 'react-native';
 
 export interface InputBarProps {
     onSend: (message: string) => void;
@@ -9,6 +9,7 @@ export interface InputBarProps {
     placeholder?: string;
     style?: ViewStyle;
     leftAccessory?: ReactNode;
+    disabled?: boolean;
 }
 
 export const InputBar: React.FC<InputBarProps> = ({
@@ -18,11 +19,12 @@ export const InputBar: React.FC<InputBarProps> = ({
     placeholder = 'Type a message...',
     style,
     leftAccessory,
+    disabled = false,
 }) => {
     const [message, setMessage] = useState('');
 
     const handleSend = () => {
-        if (message.trim()) {
+        if (message.trim() && !disabled) {
             onSend(message.trim());
             setMessage('');
         }
@@ -37,6 +39,7 @@ export const InputBar: React.FC<InputBarProps> = ({
                     backgroundColor: '#fff',
                     paddingHorizontal: 16,
                     paddingVertical: 12,
+                    opacity: disabled ? 0.7 : 1,
                 },
                 style,
             ]}
@@ -44,7 +47,7 @@ export const InputBar: React.FC<InputBarProps> = ({
             {/* Left accessory or attach button */}
             {leftAccessory ||
                 (onAttachPress && (
-                    <TouchableOpacity onPress={onAttachPress} style={{ marginRight: 8 }}>
+                    <TouchableOpacity onPress={onAttachPress} disabled={disabled} style={{ marginRight: 8 }}>
                         <Ionicons name="add-circle-outline" size={28} color="#757575" />
                     </TouchableOpacity>
                 ))}
@@ -69,11 +72,23 @@ export const InputBar: React.FC<InputBarProps> = ({
                     style={{ fontSize: 16, color: '#111827', paddingVertical: 0 }}
                     multiline
                     maxLength={500}
+                    editable={!disabled}
                 />
             </View>
 
-            {/* Send or Voice button */}
-            {message.trim() ? (
+            {/* Send button or loading indicator */}
+            {disabled ? (
+                <View
+                    style={{
+                        width: 40,
+                        height: 40,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <ActivityIndicator size="small" color="#2196F3" />
+                </View>
+            ) : message.trim() ? (
                 <TouchableOpacity
                     onPress={handleSend}
                     style={{
