@@ -9,7 +9,6 @@ import 'react-native-reanimated';
 
 import '../global.css';
 
-import { useEffect, useState } from 'react';
 import { useColorScheme } from '@/core/hooks';
 import { useUserStore } from '@/core/stores';
 
@@ -20,21 +19,7 @@ export const unstable_settings = {
 export default function RootLayout() {
     const colorScheme = useColorScheme();
     const hasCompletedOnboarding = useUserStore((state) => state.hasCompletedOnboarding);
-    const [isHydrated, setIsHydrated] = useState(false);
-
-    // Wait for Zustand hydration
-    useEffect(() => {
-        const unsubscribe = useUserStore.persist.onFinishHydration(() => {
-            setIsHydrated(true);
-        });
-        
-        // Check if already hydrated
-        if (useUserStore.persist.hasHydrated()) {
-            setIsHydrated(true);
-        }
-
-        return () => unsubscribe();
-    }, []);
+    const isHydrated = useUserStore((state) => state._hasHydrated);
 
     if (!isHydrated) {
         // Loading state while hydrating

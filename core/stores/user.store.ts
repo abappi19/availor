@@ -33,10 +33,13 @@ interface UserState {
     // User profile
     user: UserProfile | null;
     hasCompletedOnboarding: boolean;
-    
+
     // AI personalization
     aiSettings: AIPersonalization | null;
-    
+
+    // Hydration state
+    _hasHydrated: boolean;
+
     // Actions
     setUser: (user: UserProfile) => void;
     updateUser: (updates: Partial<UserProfile>) => void;
@@ -44,6 +47,7 @@ interface UserState {
     updateAISettings: (updates: Partial<AIPersonalization>) => void;
     completeOnboarding: () => void;
     clearUser: () => void;
+    setHasHydrated: (state: boolean) => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -52,6 +56,7 @@ export const useUserStore = create<UserState>()(
             user: null,
             hasCompletedOnboarding: false,
             aiSettings: null,
+            _hasHydrated: false,
 
             setUser: (user) =>
                 set({
@@ -85,10 +90,23 @@ export const useUserStore = create<UserState>()(
                     hasCompletedOnboarding: false,
                     aiSettings: null,
                 }),
+
+            setHasHydrated: (state) =>
+                set({ _hasHydrated: state }),
         }),
         {
             name: 'user-storage',
             storage: createJSONStorage(() => AsyncStorage),
+            onRehydrateStorage: () => (state) => {
+                // Called after rehydration is complete
+                state?.setHasHydrated(true);
+            },
+            partialize: (state) => ({
+                // Only persist these fields, not _hasHydrated
+                user: state.user,
+                hasCompletedOnboarding: state.hasCompletedOnboarding,
+                aiSettings: state.aiSettings,
+            }),
         }
     )
 );
