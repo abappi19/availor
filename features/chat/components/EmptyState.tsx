@@ -2,9 +2,10 @@
  * EmptyState Component
  */
 
-import React from 'react';
-import { Box, Text, Center, VStack, HStack, Icon } from '@/core/ui';
+import { Box, Center, HStack, Text, VStack } from '@/components/ui';
+import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import React from 'react';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 const AnimatedCenter = Animated.createAnimatedComponent(Center);
@@ -27,7 +28,7 @@ export function EmptyState() {
                         justifyContent: 'center',
                     }}
                 >
-                    <Icon name="chatbubbles-outline" size="xl" color="#FFFFFF" />
+                    <Ionicons name="chatbubbles-outline" size={48} color="#FFFFFF" />
                 </LinearGradient>
             </Box>
 
@@ -38,8 +39,8 @@ export function EmptyState() {
 
             {/* Message */}
             <Text className="text-base text-gray-600 dark:text-gray-400 text-center leading-6 mb-8">
-                Hello! I'm your AI English teacher. I'm here to help you improve your
-                English skills. What would you like to practice today?
+                Hello! I'm your AI English teacher. I'm here to help you improve your English skills. What would you
+                like to practice today?
             </Text>
 
             {/* Suggestions */}
@@ -53,9 +54,7 @@ export function EmptyState() {
                             key={topic}
                             className="bg-primary-50 dark:bg-primary-900 border border-primary-200 dark:border-primary-700 rounded-full px-4 py-2 mb-2"
                         >
-                            <Text className="text-primary-700 dark:text-primary-300 text-sm font-medium">
-                                {topic}
-                            </Text>
+                            <Text className="text-primary-700 dark:text-primary-300 text-sm font-medium">{topic}</Text>
                         </Box>
                     ))}
                 </HStack>

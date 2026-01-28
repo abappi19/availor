@@ -2,9 +2,10 @@
  * InputBar Component
  */
 
+import { Box, HStack, Pressable, Spinner } from '@/components/ui';
+import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { TextInput, useColorScheme } from 'react-native';
-import { Box, HStack, Pressable, Icon, Spinner } from '@/core/ui';
 import { CHAT_CONSTANTS } from '../constants';
 
 interface InputBarProps {
@@ -14,12 +15,7 @@ interface InputBarProps {
     placeholder?: string;
 }
 
-export function InputBar({
-    onSend,
-    onVoicePress,
-    disabled = false,
-    placeholder = 'Type a message...',
-}: InputBarProps) {
+export function InputBar({ onSend, onVoicePress, disabled = false, placeholder = 'Type a message...' }: InputBarProps) {
     const [message, setMessage] = useState('');
     const colorScheme = useColorScheme();
     const isDark = colorScheme === 'dark';
@@ -56,21 +52,18 @@ export function InputBar({
                 {/* Send/Voice Button */}
                 {disabled ? (
                     <Box className="w-11 h-11 items-center justify-center">
-                        <Spinner size="sm" color="#2196F3" />
+                        <Spinner size="small" color="#2196F3" />
                     </Box>
                 ) : canSend ? (
                     <Pressable
                         onPress={handleSend}
                         className="w-11 h-11 rounded-full bg-primary-500 items-center justify-center"
                     >
-                        <Icon name="send" size="md" color="#FFFFFF" />
+                        <Ionicons name="send" size={24} color="#FFFFFF" />
                     </Pressable>
                 ) : onVoicePress ? (
-                    <Pressable
-                        onPress={onVoicePress}
-                        className="w-11 h-11 items-center justify-center"
-                    >
-                        <Icon name="mic" size="lg" color="#2196F3" />
+                    <Pressable onPress={onVoicePress} className="w-11 h-11 items-center justify-center">
+                        <Ionicons name="mic" size={32} color="#2196F3" />
                     </Pressable>
                 ) : null}
             </HStack>

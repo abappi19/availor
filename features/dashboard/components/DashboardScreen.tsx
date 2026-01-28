@@ -2,16 +2,16 @@
  * DashboardScreen Component
  */
 
-import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Box, Text, VStack, HStack, ScrollView, Spinner, Center } from '@/core/ui';
+import { Box, Center, HStack, ScrollView, Spinner, Text, VStack } from '@/components/ui';
 import { useUserStore } from '@/core/stores';
 import { formatDuration } from '@/core/utils/string';
+import React from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDashboard } from '../hooks/use-dashboard';
+import { AchievementList } from './AchievementList';
+import { LevelBadge } from './LevelBadge';
 import { StatsCard } from './StatsCard';
 import { StreakCounter } from './StreakCounter';
-import { LevelBadge } from './LevelBadge';
-import { AchievementList } from './AchievementList';
 
 export function DashboardScreen() {
     const user = useUserStore((state) => state.user);
@@ -29,16 +29,13 @@ export function DashboardScreen() {
     if (isLoading || !gamification || !levelInfo || !levelProgress) {
         return (
             <Center className="flex-1 bg-gray-50 dark:bg-gray-900">
-                <Spinner size="lg" color="#2196F3" />
+                <Spinner size="large" color="#2196F3" />
             </Center>
         );
     }
 
     return (
-        <SafeAreaView
-            className="flex-1 bg-gray-50 dark:bg-gray-900"
-            edges={['top', 'left', 'right']}
-        >
+        <SafeAreaView className="flex-1 bg-gray-50 dark:bg-gray-900" edges={['top', 'left', 'right']}>
             <ScrollView
                 className="flex-1"
                 contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
@@ -61,11 +58,7 @@ export function DashboardScreen() {
 
                 {/* Level */}
                 <Box className="mb-6">
-                    <LevelBadge
-                        levelInfo={levelInfo}
-                        progress={levelProgress}
-                        totalXP={gamification.totalXP}
-                    />
+                    <LevelBadge levelInfo={levelInfo} progress={levelProgress} totalXP={gamification.totalXP} />
                 </Box>
 
                 {/* Today's Stats */}
@@ -113,10 +106,7 @@ export function DashboardScreen() {
                 {/* Achievements */}
                 <VStack space="md">
                     <Text className="text-lg font-semibold text-gray-900 dark:text-white">Achievements</Text>
-                    <AchievementList
-                        unlocked={unlockedAchievements}
-                        locked={lockedAchievements}
-                    />
+                    <AchievementList unlocked={unlockedAchievements} locked={lockedAchievements} />
                 </VStack>
             </ScrollView>
         </SafeAreaView>

@@ -1,6 +1,3 @@
-// UI Components
-export * from './ui';
-
 // Services
 export * from './services';
 

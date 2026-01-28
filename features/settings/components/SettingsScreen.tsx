@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Box, Text, VStack, ScrollView, Divider, Heading } from '@/core/ui';
+import { Box, Text, VStack, ScrollView, Divider, Heading } from '@/components/ui';
 import { useSettings } from '../hooks/use-settings';
 import { ProfileSection } from './ProfileSection';
 import { AISection } from './AISection';
@@ -25,7 +25,7 @@ export function SettingsScreen() {
             >
                 {/* Header */}
                 <VStack space="sm" className="mb-6">
-                    <Heading level="h1">
+                    <Heading size="3xl">
                         Settings
                     </Heading>
                     <Text className="text-gray-500 dark:text-gray-400">

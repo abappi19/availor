@@ -3,7 +3,8 @@
  */
 
 import React from 'react';
-import { Box, Text, VStack, HStack, Avatar, Badge, Pressable, Icon } from '@/core/ui';
+import { Box, Text, VStack, HStack, Avatar, AvatarFallbackText, Badge, BadgeText, Pressable } from '@/components/ui';
+import { Ionicons } from '@expo/vector-icons';
 import type { UserProfile } from '@/core/types';
 
 interface ProfileSectionProps {
@@ -20,16 +21,25 @@ export function ProfileSection({ user, onEditPress }: ProfileSectionProps) {
         );
     }
 
+    const initials = user.name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+
     return (
         <Box className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700">
             <HStack space="lg" className="items-center">
-                <Avatar name={user.name} size="xl" />
+                <Avatar size="xl">
+                    <AvatarFallbackText>{initials}</AvatarFallbackText>
+                </Avatar>
 
                 <VStack className="flex-1" space="xs">
                     <Text className="text-xl font-bold text-gray-900 dark:text-white">{user.name}</Text>
                     <HStack space="sm" className="items-center">
-                        <Badge colorScheme="primary" size="sm">
-                            {user.englishLevel}
+                        <Badge action="info" size="sm">
+                            <BadgeText>{user.englishLevel}</BadgeText>
                         </Badge>
                         <Text className="text-sm text-gray-500 dark:text-gray-400">{user.learningStyle}</Text>
                     </HStack>
@@ -43,7 +53,7 @@ export function ProfileSection({ user, onEditPress }: ProfileSectionProps) {
                         onPress={onEditPress}
                         className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 items-center justify-center"
                     >
-                        <Icon name="pencil" size="md" color="#6B7280" />
+                        <Ionicons name="pencil" size={24} color="#6B7280" />
                     </Pressable>
                 )}
             </HStack>

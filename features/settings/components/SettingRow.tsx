@@ -4,7 +4,11 @@
 
 import React from 'react';
 import { Switch, useColorScheme } from 'react-native';
-import { Box, Text, HStack, Icon, Pressable, type IconName } from '@/core/ui';
+import { Box, Text, HStack, Pressable } from '@/components/ui';
+import { Ionicons } from '@expo/vector-icons';
+import type { ComponentProps } from 'react';
+
+type IconName = ComponentProps<typeof Ionicons>['name'];
 
 interface SettingRowProps {
     title: string;
@@ -46,7 +50,7 @@ export function SettingRow({
                     className="w-10 h-10 rounded-xl items-center justify-center"
                     style={{ backgroundColor: bgColor }}
                 >
-                    <Icon name={icon} size="md" color={iconColor} />
+                    <Ionicons name={icon} size={24} color={iconColor} />
                 </Box>
             )}
 
@@ -77,7 +81,7 @@ export function SettingRow({
             )}
 
             {showChevron && (type === 'link' || type === 'select') && (
-                <Icon name="chevron-forward" size="md" color={isDark ? '#6B7280' : '#9CA3AF'} />
+                <Ionicons name="chevron-forward" size={24} color={isDark ? '#6B7280' : '#9CA3AF'} />
             )}
         </HStack>
     );

@@ -2,9 +2,9 @@
  * User Store - Global user state with Zustand
  */
 
-import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export type EnglishLevel = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
 export type LearningStyle = 'visual' | 'auditory' | 'reading' | 'kinesthetic';
@@ -66,23 +66,17 @@ export const useUserStore = create<UserState>()(
 
             updateUser: (updates) =>
                 set((state) => ({
-                    user: state.user
-                        ? { ...state.user, ...updates, updatedAt: Date.now() }
-                        : null,
+                    user: state.user ? { ...state.user, ...updates, updatedAt: Date.now() } : null,
                 })),
 
-            setAISettings: (settings) =>
-                set({ aiSettings: settings }),
+            setAISettings: (settings) => set({ aiSettings: settings }),
 
             updateAISettings: (updates) =>
                 set((state) => ({
-                    aiSettings: state.aiSettings
-                        ? { ...state.aiSettings, ...updates }
-                        : null,
+                    aiSettings: state.aiSettings ? { ...state.aiSettings, ...updates } : null,
                 })),
 
-            completeOnboarding: () =>
-                set({ hasCompletedOnboarding: true }),
+            completeOnboarding: () => set({ hasCompletedOnboarding: true }),
 
             clearUser: () =>
                 set({
@@ -91,8 +85,7 @@ export const useUserStore = create<UserState>()(
                     aiSettings: null,
                 }),
 
-            setHasHydrated: (state) =>
-                set({ _hasHydrated: state }),
+            setHasHydrated: (state) => set({ _hasHydrated: state }),
         }),
         {
             name: 'user-storage',

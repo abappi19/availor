@@ -8,6 +8,9 @@
       ],
       "@features/*": [
         "./features/*"
+      ],
+      "tailwind.config": [
+        "./tailwind.config.js"
       ]
     }
   },

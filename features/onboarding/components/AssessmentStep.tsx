@@ -3,7 +3,7 @@
  */
 
 import React, { useState } from 'react';
-import { Box, Text, VStack, Button, Heading, HStack, Pressable, ScrollView } from '@/core/ui';
+import { Box, Text, VStack, Button, ButtonText, Heading, HStack, Pressable, ScrollView } from '@/components/ui';
 import { QUIZ_QUESTIONS } from '../constants';
 
 interface AssessmentStepProps {
@@ -29,7 +29,7 @@ export function AssessmentStep({ answers, onAnswer }: AssessmentStepProps) {
             <VStack space="xl">
                 {/* Header */}
                 <VStack space="md" className="items-center">
-                    <Heading level="h2" className="text-center">
+                    <Heading size="2xl" className="text-center">
                         Quick Assessment
                     </Heading>
                     <Text className="text-gray-600 dark:text-gray-400 text-center">
@@ -109,22 +109,24 @@ export function AssessmentStep({ answers, onAnswer }: AssessmentStepProps) {
                 {/* Navigation */}
                 <HStack className="justify-between pt-4">
                     <Button
-                        variant="ghost"
+                        variant="outline"
+                        action="secondary"
                         onPress={() => setCurrentQuestion(Math.max(0, currentQuestion - 1))}
-                        isDisabled={currentQuestion === 0}
+                        disabled={currentQuestion === 0}
                     >
-                        Previous
+                        <ButtonText>Previous</ButtonText>
                     </Button>
                     <Button
-                        variant="ghost"
+                        variant="outline"
+                        action="secondary"
                         onPress={() =>
                             setCurrentQuestion(
                                 Math.min(QUIZ_QUESTIONS.length - 1, currentQuestion + 1)
                             )
                         }
-                        isDisabled={currentQuestion === QUIZ_QUESTIONS.length - 1}
+                        disabled={currentQuestion === QUIZ_QUESTIONS.length - 1}
                     >
-                        Next
+                        <ButtonText>Next</ButtonText>
                     </Button>
                 </HStack>
             </VStack>

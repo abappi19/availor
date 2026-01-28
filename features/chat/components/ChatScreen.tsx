@@ -2,10 +2,10 @@
  * ChatScreen Component
  */
 
+import { Box, KeyboardAvoidingView, Text } from '@/components/ui';
+import { useAppStore } from '@/core/stores';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAppStore } from '@/core/stores';
-import { Box, KeyboardAvoidingView, Text } from '@/core/ui';
 import { useChat } from '../hooks/use-chat';
 import { InputBar } from './InputBar';
 import { MessageList } from './MessageList';

@@ -3,7 +3,8 @@
  */
 
 import React from 'react';
-import { Box, Text, VStack, Heading, HStack, Pressable, ScrollView, Icon } from '@/core/ui';
+import { Box, Text, VStack, Heading, HStack, Pressable, ScrollView } from '@/components/ui';
+import { Ionicons } from '@expo/vector-icons';
 import type { LearningStyle } from '@/core/types';
 import { INTERESTS, DAILY_GOAL_OPTIONS } from '../constants';
 
@@ -36,7 +37,7 @@ export function PreferencesStep({
             <VStack space="xl">
                 {/* Header */}
                 <VStack space="md" className="items-center">
-                    <Heading level="h2" className="text-center">
+                    <Heading size="2xl" className="text-center">
                         Personalize Your Experience
                     </Heading>
                     <Text className="text-gray-600 dark:text-gray-400 text-center">
@@ -63,9 +64,9 @@ export function PreferencesStep({
                                     }`}
                                 >
                                     <VStack space="sm" className="items-center">
-                                        <Icon
+                                        <Ionicons
                                             name={style.icon as any}
-                                            size="lg"
+                                            size={32}
                                             color={isSelected ? '#2196F3' : '#6B7280'}
                                         />
                                         <Text

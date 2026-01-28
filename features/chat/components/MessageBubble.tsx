@@ -2,7 +2,7 @@
  * MessageBubble Component
  */
 
-import { Box, HStack, Text } from '@/core/ui';
+import { Box, HStack, Text } from '@/components/ui';
 import { formatMessageTime } from '@/core/utils/date';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { memo } from 'react';

@@ -2,8 +2,8 @@
  * LevelBadge Component
  */
 
+import { Box, HStack, Progress, ProgressFilledTrack, Text, VStack } from '@/components/ui';
 import React from 'react';
-import { Box, Text, HStack, VStack, Progress } from '@/core/ui';
 import type { LevelInfo } from '../types';
 
 interface LevelBadgeProps {
@@ -47,11 +47,9 @@ export function LevelBadge({ levelInfo, progress, totalXP }: LevelBadgeProps) {
                         {progress.percentage}%
                     </Text>
                 </HStack>
-                <Progress
-                    value={progress.percentage}
-                    colorScheme="primary"
-                    size="md"
-                />
+                <Progress value={progress.percentage} size="md">
+                    <ProgressFilledTrack style={{ width: `${progress.percentage}%` }} />
+                </Progress>
                 <Text className="text-xs text-gray-500 dark:text-gray-400 text-center">
                     {progress.max - progress.current} XP to level {levelInfo.level + 1}
                 </Text>

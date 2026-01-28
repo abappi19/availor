@@ -3,7 +3,8 @@
  */
 
 import React from 'react';
-import { Box, Text, VStack, HStack, Heading, Icon, Center } from '@/core/ui';
+import { Box, Text, VStack, HStack, Heading, Center } from '@/components/ui';
+import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated';
 import type { EnglishLevel } from '@/core/types';
@@ -39,7 +40,7 @@ export function CompletionStep({ name, level }: CompletionStepProps) {
                             justifyContent: 'center',
                         }}
                     >
-                        <Icon name="checkmark" size="xl" color="#FFFFFF" />
+                        <Ionicons name="checkmark" size={48} color="#FFFFFF" />
                     </LinearGradient>
                 </AnimatedBox>
 
@@ -49,7 +50,7 @@ export function CompletionStep({ name, level }: CompletionStepProps) {
                     space="md"
                     className="items-center"
                 >
-                    <Heading level="h1" className="text-center">
+                    <Heading size="3xl" className="text-center">
                         You're all set, {name}!
                     </Heading>
                     <Text className="text-gray-600 dark:text-gray-400 text-center text-lg">
@@ -95,11 +96,11 @@ export function CompletionStep({ name, level }: CompletionStepProps) {
                     <Text className="text-sm text-gray-500 dark:text-gray-400">What's next?</Text>
                     <HStack space="md" className="flex-wrap justify-center">
                         <HStack space="xs" className="items-center bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-1">
-                            <Icon name="chatbubble-outline" size="sm" color="#6B7280" />
+                            <Ionicons name="chatbubble-outline" size={16} color="#6B7280" />
                             <Text className="text-sm text-gray-600 dark:text-gray-300">Start chatting</Text>
                         </HStack>
                         <HStack space="xs" className="items-center bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-1">
-                            <Icon name="mic-outline" size="sm" color="#6B7280" />
+                            <Ionicons name="mic-outline" size={16} color="#6B7280" />
                             <Text className="text-sm text-gray-600 dark:text-gray-300">Practice speaking</Text>
                         </HStack>
                     </HStack>

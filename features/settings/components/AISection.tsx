@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Box, Text, VStack, Divider } from '@/core/ui';
+import { Box, Text, Divider } from '@/components/ui';
 import type { AIPersonalization } from '@/core/types';
 import { SettingRow } from './SettingRow';
 

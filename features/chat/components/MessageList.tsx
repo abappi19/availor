@@ -2,12 +2,12 @@
  * MessageList Component
  */
 
-import React, { useRef, useEffect } from 'react';
-import { ScrollView as RNScrollView } from 'react-native';
-import { Box, ScrollView } from '@/core/ui';
-import { MessageBubble } from './MessageBubble';
-import { EmptyState } from './EmptyState';
+import { ScrollView } from '@/components/ui';
+import React, { useEffect, useRef } from 'react';
+import type { ScrollView as RNScrollView } from 'react-native';
 import type { Message } from '../types';
+import { EmptyState } from './EmptyState';
+import { MessageBubble } from './MessageBubble';
 
 interface MessageListProps {
     messages: Message[];

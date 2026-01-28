@@ -2,15 +2,15 @@
  * TypingIndicator Component
  */
 
+import { Box, HStack } from '@/components/ui';
 import React, { useEffect } from 'react';
-import { Box, HStack } from '@/core/ui';
 import Animated, {
     useAnimatedStyle,
     useSharedValue,
+    withDelay,
     withRepeat,
     withSequence,
     withTiming,
-    withDelay,
 } from 'react-native-reanimated';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
@@ -22,25 +22,11 @@ function Dot({ delay }: { delay: number }) {
     useEffect(() => {
         scale.value = withDelay(
             delay,
-            withRepeat(
-                withSequence(
-                    withTiming(1.2, { duration: 300 }),
-                    withTiming(1, { duration: 300 })
-                ),
-                -1,
-                true
-            )
+            withRepeat(withSequence(withTiming(1.2, { duration: 300 }), withTiming(1, { duration: 300 })), -1, true)
         );
         opacity.value = withDelay(
             delay,
-            withRepeat(
-                withSequence(
-                    withTiming(1, { duration: 300 }),
-                    withTiming(0.4, { duration: 300 })
-                ),
-                -1,
-                true
-            )
+            withRepeat(withSequence(withTiming(1, { duration: 300 }), withTiming(0.4, { duration: 300 })), -1, true)
         );
     }, [delay, scale, opacity]);
 
@@ -49,12 +35,7 @@ function Dot({ delay }: { delay: number }) {
         opacity: opacity.value,
     }));
 
-    return (
-        <AnimatedBox
-            style={animatedStyle}
-            className="w-2 h-2 rounded-full bg-gray-500 dark:bg-gray-400"
-        />
-    );
+    return <AnimatedBox style={animatedStyle} className="w-2 h-2 rounded-full bg-gray-500 dark:bg-gray-400" />;
 }
 
 export function TypingIndicator() {

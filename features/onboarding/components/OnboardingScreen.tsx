@@ -2,14 +2,14 @@
  * OnboardingScreen Component
  */
 
+import { Box, Button, ButtonText, HStack, Progress, ProgressFilledTrack, VStack } from '@/components/ui';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Box, VStack, HStack, Button, Progress } from '@/core/ui';
 import { useOnboarding } from '../hooks/use-onboarding';
-import { WelcomeStep } from './WelcomeStep';
 import { AssessmentStep } from './AssessmentStep';
-import { PreferencesStep } from './PreferencesStep';
 import { CompletionStep } from './CompletionStep';
+import { PreferencesStep } from './PreferencesStep';
+import { WelcomeStep } from './WelcomeStep';
 
 export function OnboardingScreen() {
     const {
@@ -46,9 +46,7 @@ export function OnboardingScreen() {
             case 'welcome':
                 return <WelcomeStep name={state.name} onNameChange={setName} />;
             case 'assessment':
-                return (
-                    <AssessmentStep answers={quizAnswers} onAnswer={setQuizAnswer} />
-                );
+                return <AssessmentStep answers={quizAnswers} onAnswer={setQuizAnswer} />;
             case 'preferences':
                 return (
                     <PreferencesStep
@@ -82,16 +80,16 @@ export function OnboardingScreen() {
         }
     };
 
+    const progressPercentage = ((currentStepIndex + 1) / totalSteps) * 100;
+
     return (
         <SafeAreaView className="flex-1 bg-white dark:bg-gray-900">
             <VStack className="flex-1">
                 {/* Progress */}
                 <Box className="px-6 pt-4">
-                    <Progress
-                        value={((currentStepIndex + 1) / totalSteps) * 100}
-                        colorScheme="primary"
-                        size="sm"
-                    />
+                    <Progress value={progressPercentage} size="sm">
+                        <ProgressFilledTrack style={{ width: `${progressPercentage}%` }} />
+                    </Progress>
                 </Box>
 
                 {/* Content */}
@@ -102,16 +100,15 @@ export function OnboardingScreen() {
                     <HStack space="md">
                         {currentStepIndex > 0 && state.currentStep !== 'completion' && (
                             <Button variant="outline" className="flex-1" onPress={prevStep}>
-                                Back
+                                <ButtonText>Back</ButtonText>
                             </Button>
                         )}
-                        <Button
-                            className="flex-1"
-                            onPress={handleNext}
-                            isDisabled={!canProceed()}
-                            isLoading={isSubmitting}
-                        >
-                            {getButtonText()}
+                        <Button className="flex-1" onPress={handleNext} disabled={!canProceed()}>
+                            {isSubmitting ? (
+                                <ButtonText>Loading...</ButtonText>
+                            ) : (
+                                <ButtonText>{getButtonText()}</ButtonText>
+                            )}
                         </Button>
                     </HStack>
                 </Box>

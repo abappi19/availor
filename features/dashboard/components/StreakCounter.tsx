@@ -2,9 +2,10 @@
  * StreakCounter Component
  */
 
-import React from 'react';
-import { Box, Text, HStack, Icon } from '@/core/ui';
+import { Box, HStack, Text } from '@/components/ui';
+import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import React from 'react';
 
 interface StreakCounterProps {
     days: number;
@@ -23,11 +24,9 @@ export function StreakCounter({ days }: StreakCounterProps) {
             >
                 <HStack className="justify-between items-center">
                     <HStack space="md" className="items-center">
-                        <Icon name="flame" size="xl" color="#FFFFFF" />
+                        <Ionicons name="flame" size={48} color="#FFFFFF" />
                         <Box>
-                            <Text className="text-white text-sm font-medium opacity-90">
-                                Current Streak
-                            </Text>
+                            <Text className="text-white text-sm font-medium opacity-90">Current Streak</Text>
                             <Text className="text-white text-3xl font-bold">
                                 {days} {days === 1 ? 'day' : 'days'}
                             </Text>
