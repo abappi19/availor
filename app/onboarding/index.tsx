@@ -1,10 +1,9 @@
 /**
- * Onboarding Entry Point
- * Main onboarding flow screen
+ * Onboarding Screen
  */
 
-import { OnboardingFlow } from '@/features/onboarding';
+import { OnboardingScreen } from '@/features/onboarding';
 
-export default function OnboardingScreen() {
-    return <OnboardingFlow />;
+export default function Onboarding() {
+    return <OnboardingScreen />;
 }

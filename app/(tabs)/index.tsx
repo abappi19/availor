@@ -1,17 +1,9 @@
 /**
- * Main Conversation Screen (Home Tab)
- * Shown after onboarding is complete
+ * Home Screen - Chat Tab
  */
 
-import { ConversationScreen } from '@/features/conversation';
+import { ChatScreen } from '@/features/chat';
 
 export default function HomeScreen() {
-    // useEffect(() => {
-    //   AsyncStorage.getItem('hasCompletedOnboarding').then((value) => {
-    //     if (!value) {
-    //       router.push('/onboarding');
-    //     }
-    //   });
-    // }, []);
-    return <ConversationScreen />;
+    return <ChatScreen />;
 }

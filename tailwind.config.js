@@ -1,9 +1,26 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-    content: ['./app/**/*.{js,jsx,ts,tsx}', './components/**/*.{js,jsx,ts,tsx}', './features/**/*.{js,jsx,ts,tsx}'],
+    content: [
+        './app/**/*.{js,jsx,ts,tsx}',
+        './core/**/*.{js,jsx,ts,tsx}',
+        './features/**/*.{js,jsx,ts,tsx}',
+    ],
+    darkMode: 'class',
     theme: {
         extend: {
             colors: {
+                // Theme colors
+                background: {
+                    DEFAULT: '#FFFFFF',
+                    secondary: '#F9FAFB',
+                    dark: '#111827',
+                    'dark-secondary': '#1F2937',
+                },
+                surface: {
+                    DEFAULT: '#FFFFFF',
+                    dark: '#1F2937',
+                },
+                // Primary palette
                 primary: {
                     50: '#E3F2FD',
                     100: '#BBDEFB',

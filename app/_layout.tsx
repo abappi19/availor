@@ -1,3 +1,7 @@
+/**
+ * Root Layout
+ */
+
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -6,8 +10,8 @@ import 'react-native-reanimated';
 import '../global.css';
 
 import { useEffect, useState } from 'react';
-import { useColorScheme } from '@/hooks/use-color-scheme';
-import { userProfileService } from '@/services/storage/userProfile';
+import { useColorScheme } from '@/core/hooks';
+import { useUserStore } from '@/core/stores';
 
 export const unstable_settings = {
     initialRouteName: 'onboarding',
@@ -15,19 +19,25 @@ export const unstable_settings = {
 
 export default function RootLayout() {
     const colorScheme = useColorScheme();
-    const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean | null>(null);
+    const hasCompletedOnboarding = useUserStore((state) => state.hasCompletedOnboarding);
+    const [isHydrated, setIsHydrated] = useState(false);
 
+    // Wait for Zustand hydration
     useEffect(() => {
-        checkOnboardingStatus();
-    }, [checkOnboardingStatus]);
+        const unsubscribe = useUserStore.persist.onFinishHydration(() => {
+            setIsHydrated(true);
+        });
+        
+        // Check if already hydrated
+        if (useUserStore.persist.hasHydrated()) {
+            setIsHydrated(true);
+        }
 
-    const checkOnboardingStatus = async () => {
-        const profile = await userProfileService.getProfile();
-        setHasCompletedOnboarding(profile?.hasCompletedOnboarding ?? false);
-    };
+        return () => unsubscribe();
+    }, []);
 
-    if (hasCompletedOnboarding === null) {
-        // Loading state
+    if (!isHydrated) {
+        // Loading state while hydrating
         return null;
     }
 
@@ -39,7 +49,6 @@ export default function RootLayout() {
                 ) : (
                     <>
                         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
                     </>
                 )}
             </Stack>

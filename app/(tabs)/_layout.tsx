@@ -1,11 +1,10 @@
 /**
  * Tab Navigation Layout
- * Bottom tab navigator for main app screens
  */
 
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useColorScheme } from '@/core/hooks';
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
@@ -14,11 +13,12 @@ export default function TabLayout() {
         <Tabs
             screenOptions={{
                 tabBarActiveTintColor: '#2196F3',
-                tabBarInactiveTintColor: '#999',
+                tabBarInactiveTintColor: '#9CA3AF',
                 headerShown: false,
                 tabBarStyle: {
                     borderTopWidth: 1,
-                    borderTopColor: colorScheme === 'dark' ? '#333' : '#e0e0e0',
+                    borderTopColor: colorScheme === 'dark' ? '#374151' : '#E5E7EB',
+                    backgroundColor: colorScheme === 'dark' ? '#1F2937' : '#FFFFFF',
                 },
             }}
         >
@@ -26,21 +26,27 @@ export default function TabLayout() {
                 name="index"
                 options={{
                     title: 'Chat',
-                    tabBarIcon: ({ color, size }) => <Ionicons name="chatbubbles" size={size} color={color} />,
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="chatbubbles" size={size} color={color} />
+                    ),
                 }}
             />
             <Tabs.Screen
                 name="progress"
                 options={{
                     title: 'Progress',
-                    tabBarIcon: ({ color, size }) => <Ionicons name="stats-chart" size={size} color={color} />,
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="stats-chart" size={size} color={color} />
+                    ),
                 }}
             />
             <Tabs.Screen
                 name="settings"
                 options={{
                     title: 'Settings',
-                    tabBarIcon: ({ color, size }) => <Ionicons name="settings" size={size} color={color} />,
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="settings" size={size} color={color} />
+                    ),
                 }}
             />
         </Tabs>
