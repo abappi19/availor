@@ -1,0 +1,33 @@
+/**
+ * App Configuration Constants
+ */
+
+export const CONFIG = {
+    // Chat
+    MAX_MESSAGES_CONTEXT: 10,
+    MAX_MESSAGE_LENGTH: 500,
+    TYPING_INDICATOR_DELAY: 500,
+
+    // Gamification
+    XP_PER_MESSAGE: 10,
+    XP_PER_CORRECT_ANSWER: 25,
+    XP_PER_LEVEL_MULTIPLIER: 1.5,
+    BASE_XP_FOR_LEVEL: 100,
+    DAILY_STREAK_RESET_HOUR: 4, // 4 AM local time
+
+    // Progress
+    MIN_SESSION_DURATION_SECONDS: 30,
+    PROGRESS_SYNC_INTERVAL_MS: 60000, // 1 minute
+
+    // Voice
+    VOICE_RECORDING_MAX_DURATION_MS: 30000, // 30 seconds
+    TTS_DEFAULT_RATE: 0.9,
+    TTS_DEFAULT_PITCH: 1.0,
+
+    // OCR
+    OCR_MAX_IMAGE_SIZE_MB: 10,
+
+    // UI
+    ANIMATION_DURATION_MS: 300,
+    DEBOUNCE_DELAY_MS: 300,
+} as const;

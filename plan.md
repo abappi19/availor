@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-An offline-first AI English teacher app with **stunning gamified UI** using React Native ExecuTorch's built-in hooks. Features NativeWind (Tailwind CSS) + Gluestack UI for beautiful, consistent design with atomic component architecture.
+An offline-first AI English teacher app with **stunning gamified UI** using React Native ExecuTorch's built-in hooks. Features NativeWind (Tailwind CSS) + Gluestack UI v3 local components for consistent, modern design.
 
 **Key Features**:
 - ✅ Offline-first with local AI (ExecuTorch)
@@ -30,10 +30,9 @@ An offline-first AI English teacher app with **stunning gamified UI** using Reac
 
 ### UI & Styling
 - **NativeWind**: Tailwind CSS for React Native
-- **Gluestack UI v2**: Modern component library
+- **Gluestack UI v3**: Local components in `core/ui/`
 - **React Native Reanimated**: 60fps animations
 - **React Native Gesture Handler**: Touch interactions
-- **Atomic Design Pattern**: Atoms → Molecules → Organisms → Templates
 
 ### Additional Libraries
 - **expo-speech**: Text-to-speech (native)
@@ -86,175 +85,82 @@ Free RAM     Free RAM     Free RAM        Free RAM
 - Each component has integrated UI (progress, animations)
 - Clean separation of concerns
 
-### 2. Atomic Design System
+### 2. Shared UI Layer
 
 ```
-components/
-├── atoms/           # Basic building blocks (Button, Badge, Icon)
-├── molecules/       # Combinations (MessageBubble, StreakCounter)
-├── organisms/       # Complex components (Dashboard, MessageList)
-└── templates/       # Page layouts (ChatLayout, DashboardLayout)
+core/ui/
+├── button.tsx
+├── text.tsx
+├── input.tsx
+├── avatar.tsx
+└── index.ts
 ```
 
 **Benefits**:
-- Consistency across the app
-- Reusable components
-- Easy to maintain and update
-- Scalable design system
+- Single source of UI primitives
+- Consistent styling via NativeWind
+- Clear separation from feature logic
 
 ### 3. Feature-Based Architecture
 
 ```
 features/
-├── conversation/    # Chat with AI (useLLM)
-├── voice-mode/      # Voice practice (useSpeechToText + useVAD)
-├── ocr-processor/   # Image text extraction (useOCR)
-├── onboarding/      # User assessment (useLLM)
-├── progress/        # Progress tracking
-├── gamification/    # Achievements, streaks, levels
-└── shared/          # Shared utilities
+├── chat/            # AI chat experience
+├── dashboard/       # Progress and gamification
+├── onboarding/      # User onboarding
+└── settings/        # Preferences and profile
 ```
 
 ## Project Structure
 
 ```
-eba/
+availor/
 ├── app/                            # Expo Router screens
 │   ├── (tabs)/
-│   │   ├── index.tsx              # Conversation screen
-│   │   ├── progress.tsx           # Progress dashboard
-│   │   ├── achievements.tsx       # Achievements screen
-│   │   └── profile.tsx            # Profile & settings
+│   │   ├── index.tsx              # Chat screen
+│   │   ├── progress.tsx           # Dashboard screen
+│   │   └── settings.tsx           # Settings screen
 │   ├── onboarding/
 │   │   └── index.tsx              # Onboarding flow
 │   └── _layout.tsx                # Root layout
 │
-├── components/                     # Atomic design components
-│   ├── atoms/
-│   │   ├── Button/
-│   │   │   ├── Button.tsx
-│   │   │   └── IconButton.tsx
-│   │   ├── Badge/
-│   │   │   └── Badge.tsx
-│   │   ├── Text/
-│   │   │   ├── Text.tsx
-│   │   │   └── Heading.tsx
-│   │   ├── Input/
-│   │   │   └── TextInput.tsx
-│   │   └── Avatar/
-│   │       └── Avatar.tsx
-│   │
-│   ├── molecules/
-│   │   ├── MessageBubble/
-│   │   │   ├── UserMessage.tsx
-│   │   │   └── AIMessage.tsx
-│   │   ├── StreakCounter/
-│   │   │   └── StreakCounter.tsx
-│   │   ├── LevelBadge/
-│   │   │   └── LevelBadge.tsx
-│   │   ├── AchievementCard/
-│   │   │   └── AchievementCard.tsx
-│   │   ├── ProgressBar/
-│   │   │   └── ProgressBar.tsx
-│   │   └── VoiceWaveform/
-│   │       └── VoiceWaveform.tsx
-│   │
-│   ├── organisms/
-│   │   ├── MessageList/
-│   │   │   └── MessageList.tsx
-│   │   ├── ProgressDashboard/
-│   │   │   └── ProgressDashboard.tsx
-│   │   ├── AchievementGrid/
-│   │   │   └── AchievementGrid.tsx
-│   │   ├── VoiceInterface/
-│   │   │   └── VoiceInterface.tsx
-│   │   └── OCRPreview/
-│   │       └── OCRPreview.tsx
-│   │
-│   └── templates/
-│       ├── ChatLayout/
-│       │   └── ChatLayout.tsx
-│       └── DashboardLayout/
-│           └── DashboardLayout.tsx
+├── core/                           # Shared infrastructure
+│   ├── ui/                         # Gluestack UI v3 local components
+│   ├── services/                   # LLM, speech, OCR, storage
+│   ├── stores/                     # Zustand stores
+│   ├── hooks/                      # Shared hooks
+│   ├── utils/                      # Utilities
+│   ├── errors/                     # Error handling
+│   ├── constants/                  # App constants
+│   └── types.ts
 │
 ├── features/                       # Feature modules
-│   ├── conversation/
+│   ├── chat/
 │   │   ├── components/
-│   │   │   ├── ConversationScreen.tsx
-│   │   │   ├── MessageInput.tsx
-│   │   │   └── TypingIndicator.tsx
 │   │   ├── hooks/
-│   │   │   └── useConversation.ts
-│   │   └── index.ts
-│   │
-│   ├── voice-mode/
+│   │   ├── services/
+│   │   ├── constants.ts
+│   │   └── types.ts
+│   ├── dashboard/
 │   │   ├── components/
-│   │   │   ├── VoiceModeComponent.tsx    # useSpeechToText + useVAD
-│   │   │   ├── RecordButton.tsx
-│   │   │   └── TranscriptionDisplay.tsx
 │   │   ├── hooks/
-│   │   │   └── useVoiceMode.ts
-│   │   └── index.ts
-│   │
-│   ├── ocr-processor/
-│   │   ├── components/
-│   │   │   ├── OCRProcessorComponent.tsx  # useOCR
-│   │   │   ├── BoundingBoxAnimation.tsx
-│   │   │   └── ExtractedTextPreview.tsx
-│   │   └── index.ts
-│   │
+│   │   ├── services/
+│   │   ├── constants.ts
+│   │   └── types.ts
 │   ├── onboarding/
 │   │   ├── components/
-│   │   │   ├── OnboardingFlow.tsx         # useLLM
-│   │   │   ├── SkillAssessment.tsx
-│   │   │   └── PersonalizationForm.tsx
-│   │   └── index.ts
-│   │
-│   ├── progress/
-│   │   ├── components/
-│   │   │   ├── ProgressChart.tsx
-│   │   │   └── StatCard.tsx
+│   │   ├── hooks/
 │   │   ├── services/
-│   │   │   └── progressService.ts
-│   │   └── index.ts
-│   │
-│   ├── gamification/
-│   │   ├── components/
-│   │   │   ├── AchievementList.tsx
-│   │   │   └── LevelProgress.tsx
-│   │   ├── services/
-│   │   │   └── gamificationService.ts
-│   │   └── index.ts
-│   │
-│   └── shared/
+│   │   ├── constants.ts
+│   │   └── types.ts
+│   └── settings/
 │       ├── components/
 │       ├── hooks/
-│       └── types/
-│
-├── design-system/                  # Design tokens & theme
-│   ├── tokens.ts                   # Colors, spacing, typography
-│   ├── theme.ts                    # Theme configuration
-│   └── animations.ts               # Reusable animations
-│
-├── services/                       # Core services
-│   ├── executorch/
-│   │   ├── llm.ts                 # LLM service wrapper
-│   │   ├── stt.ts                 # STT service wrapper
-│   │   └── ocr.ts                 # OCR service wrapper
-│   ├── storage/
-│   │   ├── database.ts            # SQLite setup
-│   │   ├── userProfile.ts         # User data
-│   │   └── conversationHistory.ts # Chat history
-│   └── analytics/
-│       └── progressTracking.ts    # Usage analytics
+│       └── types.ts
 │
 ├── assets/                         # Static assets
 │   ├── images/
-│   ├── icons/
-│   └── models/                    # AI models (downloaded on first launch)
-│       ├── llama-3.2-3b.pte
-│       ├── whisper-base.pte
-│       └── trocr-small.pte
+│   └── icons/
 │
 ├── plan.md                         # This file
 ├── package.json
@@ -264,31 +170,25 @@ eba/
 
 ## Implementation Phases
 
-### Phase 1: UI Foundation & Design System (1 week)
+### Phase 1: UI Foundation & Shared UI (1 week)
 
-**Goals**: Set up beautiful, consistent UI foundation
+**Goals**: Set up a clean UI foundation using NativeWind and local UI components
 
 **Tasks**:
-1. Install and configure NativeWind + Gluestack UI
+1. Install and configure NativeWind + Gluestack UI v3 CLI
 2. Set up Tailwind CSS configuration
-3. Create design tokens (colors, spacing, typography)
-4. Build atomic components:
-   - Atoms: Button, Badge, Icon, Text, Input, Avatar
-   - Molecules: MessageBubble, ProgressBar, StreakCounter
-5. Set up theme with light/dark mode
+3. Define color/spacing/typography tokens in `tailwind.config.js`
+4. Build shared UI primitives in `core/ui/`
+5. Set up light/dark styles via NativeWind classes
 6. Create example screens for component testing
 
 **Deliverables**:
-- ✅ Complete design system
-- ✅ Reusable atomic components
-- ✅ Theme configuration
-- ✅ Component documentation
+- ✅ Shared UI primitives
+- ✅ Tailwind configuration
+- ✅ Consistent styling foundation
 
 **Files to Create**:
-- `design-system/tokens.ts`
-- `design-system/theme.ts`
-- `components/atoms/**/*`
-- `components/molecules/**/*`
+- `core/ui/*`
 - `tailwind.config.js`
 
 ---
@@ -315,13 +215,12 @@ eba/
 - ✅ Smooth user experience
 
 **Files to Create**:
-- `features/conversation/components/ConversationScreen.tsx`
-- `features/conversation/components/MessageInput.tsx`
-- `components/molecules/MessageBubble/UserMessage.tsx`
-- `components/molecules/MessageBubble/AIMessage.tsx`
-- `components/organisms/MessageList/MessageList.tsx`
-- `services/executorch/llm.ts`
-- `services/storage/conversationHistory.ts`
+- `features/chat/components/ChatScreen.tsx`
+- `features/chat/components/InputBar.tsx`
+- `features/chat/components/MessageBubble.tsx`
+- `features/chat/components/MessageList.tsx`
+- `features/chat/services/chat.service.ts`
+- `features/chat/services/message.storage.ts`
 
 ---
 
@@ -347,10 +246,10 @@ eba/
 
 **Files to Create**:
 - `app/onboarding/index.tsx`
-- `features/onboarding/components/OnboardingFlow.tsx`
-- `features/onboarding/components/SkillAssessment.tsx`
-- `features/onboarding/components/PersonalizationForm.tsx`
-- `services/storage/userProfile.ts`
+- `features/onboarding/components/OnboardingScreen.tsx`
+- `features/onboarding/components/AssessmentStep.tsx`
+- `features/onboarding/components/PreferencesStep.tsx`
+- `features/onboarding/services/profile.service.ts`
 
 ---
 
@@ -376,13 +275,13 @@ eba/
 - ✅ Beautiful animations
 
 **Files to Create**:
-- `components/molecules/StreakCounter/StreakCounter.tsx`
-- `components/molecules/LevelBadge/LevelBadge.tsx`
-- `components/molecules/AchievementCard/AchievementCard.tsx`
-- `components/molecules/StatCard/StatCard.tsx`
-- `components/organisms/ProgressDashboard/ProgressDashboard.tsx`
-- `features/gamification/services/gamificationService.ts`
-- `features/progress/services/progressService.ts`
+- `features/dashboard/components/StreakCounter.tsx`
+- `features/dashboard/components/LevelBadge.tsx`
+- `features/dashboard/components/AchievementCard.tsx`
+- `features/dashboard/components/StatsCard.tsx`
+- `features/dashboard/components/DashboardScreen.tsx`
+- `features/dashboard/services/gamification.service.ts`
+- `features/dashboard/services/progress.service.ts`
 
 ---
 
@@ -409,12 +308,8 @@ eba/
 - ✅ Smooth animations
 
 **Files to Create**:
-- `features/voice-mode/components/VoiceModeComponent.tsx`
-- `components/molecules/VoiceWaveform/VoiceWaveform.tsx`
-- `features/voice-mode/components/RecordButton.tsx`
-- `features/voice-mode/components/TranscriptionDisplay.tsx`
-- `features/voice-mode/components/VoiceControls.tsx`
-- `features/voice-mode/hooks/useVoiceMode.ts`
+- `features/chat/components/VoiceButton.tsx`
+- `features/chat/hooks/use-voice.ts`
 
 ---
 
@@ -439,10 +334,8 @@ eba/
 - ✅ Context integration
 
 **Files to Create**:
-- `features/ocr-processor/components/OCRProcessorComponent.tsx`
-- `features/ocr-processor/components/BoundingBoxAnimation.tsx`
-- `features/ocr-processor/components/ExtractedTextPreview.tsx`
-- `features/ocr-processor/hooks/useOCR.ts`
+- `features/chat/components/FileUploadButton.tsx`
+- `features/chat/hooks/use-file-context.ts`
 
 ---
 
@@ -468,10 +361,9 @@ eba/
 
 **Files to Create**:
 - `app/(tabs)/progress.tsx`
-- `components/organisms/ProgressDashboard/ProgressDashboard.tsx`
-- `features/progress/components/ProgressChart.tsx`
-- `features/progress/components/WeeklyReport.tsx`
-- `features/progress/components/StreakCalendar.tsx`
+- `features/dashboard/components/ProgressChart.tsx`
+- `features/dashboard/components/WeeklyReport.tsx`
+- `features/dashboard/components/StreakCalendar.tsx`
 
 ---
 
@@ -625,7 +517,7 @@ npm install react-native-executorch
 
 # UI & Styling
 npm install nativewind
-npm install @gluestack-ui/themed
+npx gluestack-ui@latest init
 npm install tailwindcss --save-dev
 
 # Already installed (from existing package.json)
@@ -651,7 +543,6 @@ npm install date-fns
   "dependencies": {
     "react-native-executorch": "latest",
     "nativewind": "^4.0.0",
-    "@gluestack-ui/themed": "^1.0.0",
     "react-native-reanimated": "~4.1.1",
     "react-native-gesture-handler": "~2.28.0",
     "react-native-svg": "^15.0.0",
@@ -678,7 +569,7 @@ npm install date-fns
 module.exports = {
   content: [
     './app/**/*.{js,jsx,ts,tsx}',
-    './components/**/*.{js,jsx,ts,tsx}',
+    './core/**/*.{js,jsx,ts,tsx}',
     './features/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
@@ -741,7 +632,7 @@ module.exports = {
 
 ---
 
-**Last Updated**: December 21, 2025
+**Last Updated**: January 28, 2026
 **Version**: 1.0
 **Status**: Ready for Implementation 🚀
 

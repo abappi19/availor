@@ -1,6 +1,9 @@
-import { OnboardingFlow } from '@/features/onboarding';
+/**
+ * Onboarding Screen
+ */
 
-export default function OnboardingPage() {
-  return <OnboardingFlow />;
+import { OnboardingScreen } from '@/features/onboarding';
+
+export default function Onboarding() {
+    return <OnboardingScreen />;
 }
-
